@@ -63,8 +63,8 @@ int StudentWorld::init()
         }else if(item==Level::wall)
         {
             cout<<"There should be a wall at " << x <<"," <<y<<" in the maze\n";
-            x++;
             m_container.push_back(new Wall(x,y));
+            x++;
             if(x==15 && y<15)
             {
                 y++;
