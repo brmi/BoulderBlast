@@ -12,7 +12,10 @@ class Actor: public GraphObject
 {
     public:
         Actor(int imageID, int startX, int startY, Direction dir);
-        virtual ~Actor(){};
+        virtual ~Actor()
+        {
+            getGraphObjects().erase(this);
+        }
         virtual void doSomething()=0;
     
     
@@ -23,9 +26,12 @@ class Actor: public GraphObject
 class Player: public Actor
 {
     public:
-    Player(int imageID, int startX, int startY, Direction dir);
-    virtual ~Player(){};
-    virtual void doSomething();
+    Player(int startX, int startY);
+    virtual ~Player()
+    {
+        getGraphObjects().erase(this);
+    }
+    virtual void doSomething(){};
     
     //accessors
     int hitPoints();
@@ -84,9 +90,9 @@ private:
 class Wall: public Actor
 {
 public:
-    Wall(int imageID, int startX, int startY, Direction di);
+    Wall(int startX, int startY);
     virtual ~Wall(){}
-    virtual void doSomething();
+    virtual void doSomething(){};
     
     
 };

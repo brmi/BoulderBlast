@@ -7,7 +7,6 @@
 #include "Actor.h"
 #include <string>
 #include <vector>
-#include <stack>
 using namespace std;
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 
@@ -19,6 +18,7 @@ public:
     
     
     StudentWorld(std::string assetDir);
+    ~StudentWorld();
     
     virtual int init();
 
@@ -29,7 +29,8 @@ public:
 private:
     
 
-
+    vector<Actor*> m_container;         //container for my objects
+    Player* m_playerContainer;   //holds where player is
     
     int m_playercol;
     int m_playerrow;

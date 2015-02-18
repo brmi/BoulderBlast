@@ -5,11 +5,16 @@
 
 Actor::Actor(int imageID, int startX, int startY, Direction dir):GraphObject(imageID, startX, startY, none){}
 
-//Player::Player(int imageID=IID_PLAYER, int startX, int startY, Direction dir):Actor(imageID, startX, startY, right)
-//{
-//    m_hitPoints=20;
-//    m_roundAmmunition=20;
-//    setVisible(true);
-//}
+Player::Player(int startX, int startY):Actor(IID_PLAYER, startX, startY, right)
+{
+    m_hitPoints=20;
+    m_roundAmmunition=20;
+    setVisible(true);
+}
+
+Wall::Wall(int startX, int startY):Actor(IID_WALL, startX, startY, none)
+{
+    setVisible(true);
+}
 
 
