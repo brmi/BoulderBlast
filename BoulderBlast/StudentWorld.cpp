@@ -8,8 +8,85 @@ GameWorld* createStudentWorld(string assetDir)
 }
 
 // Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp
-//StudentWorld::StudentWorld(int playercol, int playerrow, int wallcol, int wallrow):GameWorld(assetDirectory()), m_playercol(playercol), m_playerrow(playerrow), m_wallcol(wallcol), m_wallrow(wallrow)
-//{
-//    
-//}
+StudentWorld::StudentWorld(std::string assetDir): GameWorld(assetDir)
+{
+    
+    
+    
+}
 
+int StudentWorld::init()
+{
+    vector<Actor*> container; //container for my objects
+    
+    //////////////////////
+    //load current level//
+    /////////////////////
+    
+    string curLevel= "level00.dat";
+    Level lev(assetDirectory());
+    Level::LoadResult result = lev.loadLevel(curLevel);
+    
+    if(result==Level::load_fail_file_not_found || result==Level::load_fail_bad_format)
+        return -1; //something bad happened
+    
+    //load was successful, can access contents
+    
+    
+    int x =0;
+    int y=0;
+    
+    
+    while(x<=15 && y<=15)
+    {
+        //getContentsOf(col,row)
+        Level::MazeEntry item = lev.getContentsOf(x, y);
+        if(item==Level::player)
+        {
+            cout<<"The player should be placed at "<< x <<","<< y <<" in the maze\n";
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::wall)
+        {
+            cout<<"There should be a wall at " << x <<"," <<y<<" in the maze\n";
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        
+        }else if(item==Level::empty || item!=Level::player || item!=Level::wall)
+        {
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }
+       
+    }
+    
+            
+    return GWSTATUS_CONTINUE_GAME;
+}
+
+int StudentWorld:: move()
+{
+		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
+    decLives();
+    return GWSTATUS_PLAYER_DIED;
+}
+
+void StudentWorld::cleanUp()
+{
+    
+}
