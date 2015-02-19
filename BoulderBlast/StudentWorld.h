@@ -27,8 +27,11 @@ public:
 
     virtual void cleanUp();
     
-    //accessors
-    std::vector<Actor*> getActor();
+   
+    Actor* getActor(int x, int y);
+    
+    //accessor
+    std::vector<Actor*> getActorContainer();
     
 
 

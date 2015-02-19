@@ -26,9 +26,24 @@ StudentWorld::~StudentWorld()
         delete (*it); //come back...did you delete everything?
 }
 
-vector<Actor*> StudentWorld::getActor()
+vector<Actor*> StudentWorld::getActorContainer()
 {
     return m_container;
+}
+
+Actor* StudentWorld::getActor(int x, int y)
+{
+    vector<Actor*> ptr = getActorContainer();
+    vector<Actor*>::iterator itr;
+    for(itr=ptr.begin(); itr!=ptr.end();)
+    {
+    
+        if((*itr)->getX() ==x && (*itr)->getY()==y)
+            return (*itr);
+        else
+            itr++;
+    }
+    return nullptr;
 }
 
 

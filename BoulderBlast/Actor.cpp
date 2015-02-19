@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include "StudentWorld.h"
-
-
+using namespace std;
+#include <iostream>
 
 // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
 
@@ -29,44 +29,10 @@ void Player::doSomething()
     int x=getX();
     int y=getY();
 
-//    std::vector<Actor*> actor=getActor();
-    
-   
-    
-    StudentWorld* ptr= getWorld();
-    
-    ptr->StudentWorld::getActor(); //this points to vector<Actor*>
-    
-    std::vector<Actor*>::iterator itr;
-    
-        
-    
-//    for(itr=(*ptr).begin(); itr!=(*ptr).end())
-//    {
-//        
-//    }
-    
-//    
-//    void removeBad(vector<Movie*>& v)
-//    {
-//        vector<Movie*>::iterator itr;
-//        
-//        for(itr=v.begin(); itr!=v.end();)
-//        {
-//            
-//            if((*itr)->rating()<50)
-//            {
-//                delete *itr;
-//                v.erase(itr);
-//            }
-//            else
-//                itr++;
-//            
-//        }
-//    }
-    
     int ch;
     
+    StudentWorld *stud= getWorld();
+
     if(getWorld()->getKey(ch))
     {
         switch(ch)
@@ -76,7 +42,13 @@ void Player::doSomething()
                 {
                     if(getDirection()!=left)
                         setDirection(left);
-                    
+                    Actor* ap= stud->getActor(--x,y);
+                    if(ap!=nullptr)
+                    {
+                        Wall *wp=dynamic_cast<Wall*>(ap);
+                        if(wp!=nullptr)
+                            return;
+                    }
                     moveTo(--x, y);
                 }else
                 {
@@ -89,6 +61,13 @@ void Player::doSomething()
                 {
                     if(getDirection()!=right)
                         setDirection(right);
+                    Actor* ap= stud->getActor(++x,y);
+                    if(ap!=nullptr)
+                    {
+                        Wall *wp=dynamic_cast<Wall*>(ap);
+                        if(wp!=nullptr)
+                            return;
+                    }
                     moveTo(++x, y);
                 }else
                 {
@@ -101,6 +80,13 @@ void Player::doSomething()
                 {
                     if(getDirection()!=up)
                         setDirection(up);
+                    Actor* ap= stud->getActor(x,++y);
+                    if(ap!=nullptr)
+                    {
+                        Wall *wp=dynamic_cast<Wall*>(ap);
+                        if(wp!=nullptr)
+                            return;
+                    }
                     moveTo(x, ++y);
                 }else
                 {
@@ -113,6 +99,13 @@ void Player::doSomething()
                 {
                     if(getDirection()!=down)
                         setDirection(down);
+                    Actor* ap= stud->getActor(x,--y);
+                    if(ap!=nullptr)
+                    {
+                        Wall *wp=dynamic_cast<Wall*>(ap);
+                        if(wp!=nullptr)
+                            return;
+                    }
                     moveTo(x, --y);
                 }else
                 {
