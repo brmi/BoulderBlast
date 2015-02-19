@@ -49,7 +49,7 @@ void Player::doSomething()
                         if(wp!=nullptr)
                             return;
                     }
-                    moveTo(--x, y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=left)
@@ -68,7 +68,7 @@ void Player::doSomething()
                         if(wp!=nullptr)
                             return;
                     }
-                    moveTo(++x, y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=right)
@@ -87,7 +87,7 @@ void Player::doSomething()
                         if(wp!=nullptr)
                             return;
                     }
-                    moveTo(x, ++y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=up)
@@ -106,7 +106,7 @@ void Player::doSomething()
                         if(wp!=nullptr)
                             return;
                     }
-                    moveTo(x, --y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=down)
