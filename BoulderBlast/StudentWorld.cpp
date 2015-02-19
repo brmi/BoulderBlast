@@ -13,8 +13,6 @@ GameWorld* createStudentWorld(string assetDir)
 StudentWorld::StudentWorld(std::string assetDir): GameWorld(assetDir)
 {
     
-    
-    
 }
 
 StudentWorld::~StudentWorld()
@@ -113,13 +111,24 @@ int StudentWorld:: move()
 		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
     
     
-    m_playerContainer->doSomething(); //brmi.
+    m_playerContainer->doSomething();
     
+    vector<Actor*>::iterator itr;
+    for(itr=m_container.begin(); itr!=m_container.end();)
+        {
+            (*itr)->doSomething();
+            itr++;
+        }
+ 
     decLives();
     return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::cleanUp()
 {
+    delete m_playerContainer;
     
+    vector<Actor*>::iterator it;
+    for(it=m_container.begin(); it!=m_container.end(); it++)
+        delete (*it); //come back...did you delete everything?
 }

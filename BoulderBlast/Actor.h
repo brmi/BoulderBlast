@@ -106,7 +106,7 @@ class Wall: public Actor
 public:
     Wall(int startX, int startY, StudentWorld* world);
     virtual ~Wall(){}
-    virtual void doSomething(){};
+    virtual void doSomething(){return;};
     
 private:
     
