@@ -51,7 +51,7 @@ int StudentWorld::init()
         Level::MazeEntry item = lev.getContentsOf(x, y);
         if(item==Level::player)
         {
-            m_playerContainer=new Player(x, y);
+            m_playerContainer=new Player(x, y, this);
             x++;
             if(x==15 && y<15)
             {
@@ -61,7 +61,7 @@ int StudentWorld::init()
             continue;
         }else if(item==Level::wall)
         {
-            m_container.push_back(new Wall(x,y));
+            m_container.push_back(new Wall(x,y, this));
             x++;
             if(x==15 && y<15)
             {
@@ -89,6 +89,8 @@ int StudentWorld::init()
 int StudentWorld:: move()
 {
 		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
+    
+    
     m_playerContainer->doSomething(); //brmi. how does this shnazz even know where the player is
     
     decLives();

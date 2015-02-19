@@ -2,6 +2,8 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include "GameWorld.h"
+
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 
@@ -11,24 +13,35 @@
 class Actor: public GraphObject
 {
     public:
-        Actor(int imageID, int startX, int startY, Direction dir);
+        Actor(int imageID, int startX, int startY, Direction dir, GameWorld* world);
         virtual ~Actor()
         {
             //getGraphObjects().erase(this);
         }
         virtual void doSomething()=0;
     
+        GameWorld* world() const;
+        bool canStep();
+    
+private:
+    GameWorld* m_actorworld;
+    bool m_step;
+    
 };
 
 class Player: public Actor
 {
     public:
-    Player(int startX, int startY);
+    Player(int startX, int startY, GameWorld* world);
     virtual ~Player()
     {
         //getGraphObjects().erase(this);
     }
     virtual void doSomething();
+    
+    //mutator
+    int numLives();
+    
     
     //accessors
     int hitPoints();
@@ -36,11 +49,12 @@ class Player: public Actor
 
     
 private:
+    
     int m_hitPoints;
     int m_roundAmmunition;
+    int m_lives;
+ 
 
-
-    
 };
 
 //class SnarlBots: public Actor
@@ -89,13 +103,13 @@ private:
 class Wall: public Actor
 {
 public:
-    Wall(int startX, int startY);
+    Wall(int startX, int startY, GameWorld* world);
     virtual ~Wall(){}
     virtual void doSomething(){};
 
 private:
     
-    
+
     
 };
 

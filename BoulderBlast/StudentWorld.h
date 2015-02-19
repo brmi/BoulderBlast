@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 using namespace std;
+
+
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 
 // contains your StudentWorld class declaration
@@ -28,7 +30,6 @@ public:
 
 private:
     
-
     vector<Actor*> m_container;         //container for my objects
     Player* m_playerContainer;   //holds where player is
  
