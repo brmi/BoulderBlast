@@ -31,17 +31,7 @@ private:
 
     vector<Actor*> m_container;         //container for my objects
     Player* m_playerContainer;   //holds where player is
-    
-    int m_playercol;
-    int m_playerrow;
-    
-    int m_wallcol;
-    int m_wallrow;
-    
-    //Coord grid[15][15];
-    
-
-    
+ 
     
 };
 

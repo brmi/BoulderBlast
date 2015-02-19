@@ -51,7 +51,6 @@ int StudentWorld::init()
         Level::MazeEntry item = lev.getContentsOf(x, y);
         if(item==Level::player)
         {
-            cout<<"The player should be placed at "<< x <<","<< y <<" in the maze\n";
             m_playerContainer=new Player(x, y);
             x++;
             if(x==15 && y<15)
@@ -62,7 +61,6 @@ int StudentWorld::init()
             continue;
         }else if(item==Level::wall)
         {
-            cout<<"There should be a wall at " << x <<"," <<y<<" in the maze\n";
             m_container.push_back(new Wall(x,y));
             x++;
             if(x==15 && y<15)
@@ -84,7 +82,6 @@ int StudentWorld::init()
         }
        
     }
-    
             
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -92,6 +89,8 @@ int StudentWorld::init()
 int StudentWorld:: move()
 {
 		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
+    m_playerContainer->doSomething(); //brmi. how does this shnazz even know where the player is
+    
     decLives();
     return GWSTATUS_CONTINUE_GAME;
 }
