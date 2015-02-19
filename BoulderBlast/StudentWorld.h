@@ -3,13 +3,12 @@
 
 #include "GameWorld.h"
 #include "GameConstants.h"
-#include "Level.h"
-#include "Actor.h"
 #include <string>
 #include <vector>
-using namespace std;
 
 
+class Actor;
+class Player;
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 
 // contains your StudentWorld class declaration
@@ -27,10 +26,12 @@ public:
     virtual int move();
 
     virtual void cleanUp();
+    
+
 
 private:
     
-    vector<Actor*> m_container;         //container for my objects
+    std::vector<Actor*> m_container;         //container for my objects
     Player* m_playerContainer;   //holds where player is
  
     

@@ -2,7 +2,8 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
-#include "GameWorld.h"
+#include "StudentWorld.h"
+
 
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
@@ -12,27 +13,27 @@
 
 class Actor: public GraphObject
 {
-    public:
-        Actor(int imageID, int startX, int startY, Direction dir, GameWorld* world);
-        virtual ~Actor()
-        {
-            //getGraphObjects().erase(this);
-        }
-        virtual void doSomething()=0;
+public:
+    Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world);
+    virtual ~Actor()
+    {
+        //getGraphObjects().erase(this);
+    }
+    virtual void doSomething()=0;
     
-        GameWorld* world() const;
-        bool canStep();
+    StudentWorld* getWorld() const;
+    bool canStep();
     
 private:
-    GameWorld* m_actorworld;
+    StudentWorld* m_actorworld;
     bool m_step;
     
 };
 
 class Player: public Actor
 {
-    public:
-    Player(int startX, int startY, GameWorld* world);
+public:
+    Player(int startX, int startY, StudentWorld* world);
     virtual ~Player()
     {
         //getGraphObjects().erase(this);
@@ -46,15 +47,15 @@ class Player: public Actor
     //accessors
     int hitPoints();
     int roundAmmunition();
-
+    
     
 private:
     
     int m_hitPoints;
     int m_roundAmmunition;
-    int m_lives;
- 
-
+    int m_lives; //this is in GameWorld
+    
+    
 };
 
 //class SnarlBots: public Actor
@@ -62,7 +63,7 @@ private:
 //public:
 //    SnarlBots(int imageID, int startX, int startY, Direction dir);
 //    virtual void doSomething();
-//    
+//
 //};
 //
 //class KleptoBots: public Actor
@@ -103,13 +104,13 @@ private:
 class Wall: public Actor
 {
 public:
-    Wall(int startX, int startY, GameWorld* world);
+    Wall(int startX, int startY, StudentWorld* world);
     virtual ~Wall(){}
     virtual void doSomething(){};
-
+    
 private:
     
-
+    
     
 };
 

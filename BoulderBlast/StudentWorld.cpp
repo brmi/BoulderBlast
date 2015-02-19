@@ -1,4 +1,6 @@
 #include "StudentWorld.h"
+#include "Actor.h"
+#include "Level.h"
 #include <string>
 using namespace std;
 
@@ -24,6 +26,7 @@ StudentWorld::~StudentWorld()
         delete (*it); //come back...did you delete everything?
 }
 
+
 int StudentWorld::init()
 {
     
@@ -41,7 +44,6 @@ int StudentWorld::init()
     
     //load was successful, can access contents
     
-    
     int x =0;
     int y=0;
     
@@ -51,7 +53,7 @@ int StudentWorld::init()
         Level::MazeEntry item = lev.getContentsOf(x, y);
         if(item==Level::player)
         {
-            m_playerContainer=new Player(x, y, this);
+            m_playerContainer= new Player(x, y, this);
             x++;
             if(x==15 && y<15)
             {
@@ -91,7 +93,7 @@ int StudentWorld:: move()
 		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
     
     
-    m_playerContainer->doSomething(); //brmi. how does this shnazz even know where the player is
+    m_playerContainer->doSomething(); //brmi.
     
     decLives();
     return GWSTATUS_CONTINUE_GAME;

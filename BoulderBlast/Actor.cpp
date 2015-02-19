@@ -5,18 +5,18 @@
 
 // Students:  Add code to this file (if you wish), Actor.h, StudentWorld.h, and StudentWorld.cpp
 
-Actor::Actor(int imageID, int startX, int startY, Direction dir, GameWorld* world):GraphObject(imageID, startX, startY, none)
+Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world):GraphObject(imageID, startX, startY, none)
 {
     m_actorworld=world;
     m_step=false;
 }
 
-GameWorld* Actor::world() const
+StudentWorld* Actor::getWorld() const
 {
     return m_actorworld;
 }
 
-Player::Player(int startX, int startY, GameWorld* world):Actor(IID_PLAYER, startX, startY, right, world)
+Player::Player(int startX, int startY, StudentWorld* world):Actor(IID_PLAYER, startX, startY, right, world)
 {
     m_lives=3;
     m_hitPoints=20;
@@ -28,10 +28,17 @@ void Player::doSomething()
 {
     int x=getX();
     int y=getY();
+
+//    std::vector<Actor*> actor=getActor();
+//    StudentWorld* ptr= getWorld();
+//    
+//    ptr->StudentWorld::getActor(); //this points to my vector of Actors
+//    
+//    
     
     int ch;
     
-    if(world()->getKey(ch))
+    if(getWorld()->getKey(ch))
     {
         switch(ch)
         {
@@ -40,6 +47,7 @@ void Player::doSomething()
                 {
                     if(getDirection()!=left)
                         setDirection(left);
+                    
                     moveTo(--x, y);
                 }else
                 {
@@ -85,7 +93,7 @@ void Player::doSomething()
                 break;
             case KEY_PRESS_ESCAPE:
                 m_lives--;
-            break;
+                break;
             case KEY_PRESS_SPACE:
                 m_roundAmmunition--;
                 break;
@@ -93,12 +101,11 @@ void Player::doSomething()
         }
     }
     
-
+    
 }
 
-Wall::Wall(int startX, int startY, GameWorld* world):Actor(IID_WALL, startX, startY, none, world)
+Wall::Wall(int startX, int startY, StudentWorld* world):Actor(IID_WALL, startX, startY, none, world)
 {
     setVisible(true);
 }
-
 
