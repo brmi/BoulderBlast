@@ -30,11 +30,40 @@ void Player::doSomething()
     int y=getY();
 
 //    std::vector<Actor*> actor=getActor();
-//    StudentWorld* ptr= getWorld();
+    
+   
+    
+    StudentWorld* ptr= getWorld();
+    
+    ptr->StudentWorld::getActor(); //this points to vector<Actor*>
+    
+    std::vector<Actor*>::iterator itr;
+    
+        
+    
+//    for(itr=(*ptr).begin(); itr!=(*ptr).end())
+//    {
+//        
+//    }
+    
 //    
-//    ptr->StudentWorld::getActor(); //this points to my vector of Actors
-//    
-//    
+//    void removeBad(vector<Movie*>& v)
+//    {
+//        vector<Movie*>::iterator itr;
+//        
+//        for(itr=v.begin(); itr!=v.end();)
+//        {
+//            
+//            if((*itr)->rating()<50)
+//            {
+//                delete *itr;
+//                v.erase(itr);
+//            }
+//            else
+//                itr++;
+//            
+//        }
+//    }
     
     int ch;
     

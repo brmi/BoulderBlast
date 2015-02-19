@@ -27,6 +27,9 @@ public:
 
     virtual void cleanUp();
     
+    //accessors
+    std::vector<Actor*> getActor();
+    
 
 
 private:

@@ -26,6 +26,11 @@ StudentWorld::~StudentWorld()
         delete (*it); //come back...did you delete everything?
 }
 
+vector<Actor*> StudentWorld::getActor()
+{
+    return m_container;
+}
+
 
 int StudentWorld::init()
 {
