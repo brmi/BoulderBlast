@@ -22,11 +22,13 @@ public:
     virtual void doSomething()=0;
     
     StudentWorld* getWorld() const;
-    bool canStep();
+    bool isDead();
+    void setDead();
+    
     
 private:
     StudentWorld* m_actorworld;
-    bool m_step;
+    bool m_isDead;
     
 };
 
@@ -49,11 +51,12 @@ public:
     int roundAmmunition();
     
     
+    
 private:
     
     int m_hitPoints;
     int m_roundAmmunition;
-    int m_lives; //this is in GameWorld
+    bool m_isDead;
     
     
 };
@@ -106,11 +109,10 @@ class Wall: public Actor
 public:
     Wall(int startX, int startY, StudentWorld* world);
     virtual ~Wall(){}
-    virtual void doSomething(){return;};
+    virtual void doSomething(){return;}
+    
     
 private:
-    
-    
     
 };
 

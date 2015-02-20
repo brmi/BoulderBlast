@@ -20,8 +20,14 @@ StudentWorld::~StudentWorld()
     delete m_playerContainer;
     
     vector<Actor*>::iterator it;
+    vector<Actor*>::iterator temp;
     for(it=m_container.begin(); it!=m_container.end(); it++)
-        delete (*it); //come back...did you delete everything?
+    {
+        temp=it;
+        m_container.erase(it); //decrease vector size
+        delete (*it); //delete Actor
+        it=temp;
+    }
 }
 
 vector<Actor*> StudentWorld::getActorContainer()

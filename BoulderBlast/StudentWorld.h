@@ -30,6 +30,8 @@ public:
    
     Actor* getActor(int x, int y);
     
+    bool playerDied();
+    
     //accessor
     std::vector<Actor*> getActorContainer();
     
