@@ -50,6 +50,48 @@ Actor* StudentWorld::getActor(int x, int y)
     return nullptr;
 }
 
+bool StudentWorld::playerDied()
+{
+    int lives= getLives();
+    if(lives<=0)
+        return true;
+    return false;
+}
+
+bool StudentWorld::playerCompletedLevel()
+{
+    if(getLevel()==3) //fix this later lol... basically set equal to last level
+        return true;
+    return false;
+}
+
+void StudentWorld::removeDeadGameObjects()
+{
+    if(playerDied())
+        delete m_playerContainer;
+    
+    vector<Actor*>::iterator itr;
+    for(itr=m_container.begin(); itr!=m_container.end(); itr++)
+    {
+        if((*itr)->isDead()==true)
+        {
+            delete *itr;
+            m_container.erase(itr);
+            itr--;
+            
+            std::cout<<"yey";
+            
+        }
+    }
+    
+}
+
+void StudentWorld::makeBullet(int x, int y, GraphObject::Direction dir)
+{
+    
+    m_container.push_back(new Bullets(x,y,dir, this));
+    
+}
 
 int StudentWorld::init()
 {
@@ -114,19 +156,39 @@ int StudentWorld::init()
 
 int StudentWorld:: move()
 {
-		  // This code is here merely to allow the game to build, run, and terminate after hitting enter a few times
-    
-    
-    m_playerContainer->doSomething();
+    if(m_playerContainer->isDead()==false)
+    {
+        m_playerContainer->doSomething();
+        
+        if(playerDied())
+            return GWSTATUS_PLAYER_DIED;
+        
+        if(playerCompletedLevel())
+            return GWSTATUS_FINISHED_LEVEL;
+    }
     
     vector<Actor*>::iterator itr;
-    for(itr=m_container.begin(); itr!=m_container.end();)
+    for(itr=m_container.begin(); itr!=m_container.end(); itr++)
+    {
+        if((*itr)->isDead()==false)
         {
             (*itr)->doSomething();
-            itr++;
+        
+            if(playerDied())
+                return GWSTATUS_PLAYER_DIED;
+        
+            if(playerCompletedLevel())
+                return GWSTATUS_FINISHED_LEVEL;
         }
- 
-    decLives();
+        
+    }
+    
+    removeDeadGameObjects();
+    
+    
+    
+
+    
     return GWSTATUS_CONTINUE_GAME;
 }
 

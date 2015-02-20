@@ -25,12 +25,26 @@ public:
     bool isDead();
     void setDead();
     
+    //accessor
+    
+    
     
 private:
     StudentWorld* m_actorworld;
     bool m_isDead;
     
 };
+
+//class ThingsThatShoot: public Actor
+//{
+//public:
+//    ThingsThatShoot(int imageID, int startX, int startY, Direction dir, StudentWorld* world);
+//    virtual ~ThingsThatShoot()
+//    {
+//    }
+//
+//    
+//};
 
 class Player: public Actor
 {
@@ -44,19 +58,20 @@ public:
     
     //mutator
     int numLives();
-    
+    int hitPoints(bool gotShot);
+    bool gotHit(bool gotHit);
     
     //accessors
-    int hitPoints();
+    
     int roundAmmunition();
     
     
     
 private:
     
+    bool m_gotHit;
     int m_hitPoints;
     int m_roundAmmunition;
-    bool m_isDead;
     
     
 };
@@ -89,14 +104,19 @@ private:
 //    Factories(int imageID, int startX, int startY, Direction dir);
 //    virtual void doSomething();
 //};
-//
-//class Bullets: public Actor
-//{
-//public:
-//    Bullets(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
+
+
+
+class Bullets: public Actor
+{
+public:
+    Bullets(int startX, int startY, Direction dir, StudentWorld* world);
+    virtual ~Bullets(){}
+    virtual void doSomething();
+    bool willDamage(Actor* ap);
+    
+};
+
 //class Exit : public Actor
 //{
 //public:

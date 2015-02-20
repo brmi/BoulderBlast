@@ -3,6 +3,7 @@
 
 #include "GameWorld.h"
 #include "GameConstants.h"
+#include "GraphObject.h"
 #include <string>
 #include <vector>
 
@@ -31,6 +32,13 @@ public:
     Actor* getActor(int x, int y);
     
     bool playerDied();
+    
+    bool playerCompletedLevel();
+    
+    void removeDeadGameObjects();
+    
+    void makeBullet(int x, int y, GraphObject::Direction dir);
+    
     
     //accessor
     std::vector<Actor*> getActorContainer();
