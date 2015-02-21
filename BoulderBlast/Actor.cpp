@@ -10,15 +10,18 @@ Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* w
     m_hitPoints=startingHitPoints;
     m_actorworld=world;
     m_isDead=false;
+    m_pushedBoulder=false;
 }
 
-Actor* Actor::getspecificActor(int x, int y)
-{
-    Actor* ptr;
-        if((ptr->getX() ==x && ptr->getY()==y))
-            return ptr;
 
-    return nullptr;
+bool Actor::pushedBoulder()
+{
+    return m_pushedBoulder;
+}
+
+void Actor::setPushedBoulder()
+{
+    m_pushedBoulder=true;
 }
 
 bool Actor::isDead()
@@ -65,7 +68,6 @@ int Player::getNumLives()
     return m_lives;
 }
 
-
 void Player::decrementLives()
 {
     if(m_lives>0)
@@ -87,39 +89,16 @@ void Player::decrementAmmo()
         m_ammo=0;
 }
 
-bool Player::playerCantStep(Actor* ap, int x, int y, Direction dir)
+
+bool Player::bulletWillHarm(Actor* a)
 {
-    Boulders *bp= dynamic_cast<Boulders*>(ap);
-    Wall *wp=dynamic_cast<Wall*>(ap);
-    Holes *hp= dynamic_cast<Holes*>(ap);
-    if(wp!=nullptr)
-        return true;
-    if(bp!=nullptr) //after this check to see if boulder can be pushed
+    if(getNumLives()>0 && getHitPoints()>2)
     {
-        if(dir==right && bp->canBePushed(++x, y, dir))
-        {
-            bp->moveBoulder(dir);
-            return false;
-        }else if(dir==left && bp->canBePushed(--x, y, dir))
-        {
-            bp->moveBoulder(dir);
-            return false;
-        }
-        else if(dir==up && bp->canBePushed(x, ++y, dir))
-        {
-            bp->moveBoulder(dir);
-            return false;
-        }else if(dir==down && bp->canBePushed(x, --y, dir))
-        {
-            bp->moveBoulder(dir);
-            return false;
-        }
-        return true;
+        decrementHitPoints(2);
+        if(getHitPoints()<0)
+            decrementLives();
     }
-    
-    if(hp!=nullptr)
-        return true;
-    return false;
+    return true;
 }
 
 void Player::doSomething()
@@ -144,13 +123,16 @@ void Player::doSomething()
                         setDirection(left);
                     dir=left;
                     
-                    Actor* ap= stud->getActor(--x,y);
+                    Actor* ap= stud->getActor(--x,y); //this gives me actor at specific location!
                     if(ap!=nullptr)
                     {
-                        if(playerCantStep(ap, x, y, dir))
+                        if(ap->blocksPlayer(ap, dir))
                             return;
                     }
-                    moveTo(x, y);
+                    if(pushedBoulder())
+                    moveTo(--x, y);
+                    else
+                        moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=left)
@@ -167,7 +149,7 @@ void Player::doSomething()
                     Actor* ap= stud->getActor(++x,y);
                     if(ap!=nullptr)
                     {
-                        if(playerCantStep(ap, x, y, dir))
+                        if(ap->blocksPlayer(ap, dir))
                             return;
                     }
                     moveTo(x, y);
@@ -187,7 +169,7 @@ void Player::doSomething()
                     Actor* ap= stud->getActor(x,++y);
                     if(ap!=nullptr)
                     {
-                        if(playerCantStep(ap, x, y, dir))
+                        if(ap->blocksPlayer(ap, dir))
                             return;
                     }
                     moveTo(x, y);
@@ -206,7 +188,7 @@ void Player::doSomething()
                     Actor* ap= stud->getActor(x,--y);
                     if(ap!=nullptr)
                     {
-                        if(playerCantStep(ap, x, y, dir)) 
+                        if(ap->blocksPlayer(ap, dir))
                             return;
                     }
                     moveTo(x, y);
@@ -253,41 +235,6 @@ Bullets::Bullets(int startX, int startY, Direction dir, StudentWorld* world):Act
     setVisible(true);
 }
 
-bool Bullets::willDamage(Actor* ap)
-{
-    Player* pp=dynamic_cast<Player*>(ap);
-    Wall* wp=dynamic_cast<Wall*>(ap);
-    Boulders* bp=dynamic_cast<Boulders*>(ap);
-    if(pp!=nullptr)
-    {
-        if(pp->getNumLives()>0 && pp->getHitPoints()>2)
-        {
-            decrementHitPoints(2);
-        }else
-            pp->decrementLives();
-        setDead();
-        return true;
-            
-    }
-    if(wp!=nullptr)
-    {
-        setDead();
-        return true;
-    }
-    if(bp!=nullptr)
-    {
-        //do this
-        if(bp->getHitPoints()>2)
-        {
-            bp->decrementHitPoints(2);
-        }else
-            bp->setDead();
-        setDead();
-        return true;
-    }
-    return false;
-}
-
 void Bullets::doSomething()
 {
     
@@ -302,37 +249,52 @@ void Bullets::doSomething()
     
     if(ap!=nullptr)
     {
-        if(willDamage(ap)==true)
+        if(ap->bulletWillHarm(ap))
+        {
+            setDead();
             return;
+        }
     }
     
     if(getDirection()==up)
     {
         moveTo(x,++y);
         Actor* lp=stud->getActor(x,y);
-        if(willDamage(lp)==true)
+        if(lp->bulletWillHarm(lp))
+        {
+            setDead();
             return;
+        }
     }
     if(getDirection()==down)
     {
         moveTo(x,--y);
         Actor* lp=stud->getActor(x,y);
-        if(willDamage(lp)==true)
+        if(lp->bulletWillHarm(lp))
+        {
+            setDead();
             return;
+        }
     }
     if(getDirection()==right)
     {
         moveTo(++x, y);
         Actor* lp=stud->getActor(x,y);
-        if(willDamage(lp)==true)
+        if(lp->bulletWillHarm(lp))
+        {
+            setDead();
             return;
+        }
     }
     if(getDirection()==left)
     {
         moveTo(--x, y);
         Actor* lp=stud->getActor(x,y);
-        if(willDamage(lp)==true)
+        if(lp->bulletWillHarm(lp))
+        {
+            setDead();
             return;
+        }
     }
 }
 
@@ -376,16 +338,49 @@ void Holes::doSomething()
 
 Boulders::Boulders(int startX, int startY, StudentWorld* world): Actor(IID_BOULDER, startX, startY, none, world, 10)
 {
-    m_isOnHole=false;
     setVisible(true);
 }
 
-bool Boulders::isOnHole()
+bool Boulders::blocksPlayer(Actor *a, Direction dir)
 {
-    return m_isOnHole;
+    int x=getX();
+    int y=getY();
+
+   if(dir==right && canBePushed(++x, y))
+   {
+       a->setPushedBoulder();
+       moveBoulder(right);
+       return true;
+   }else if(dir==left && canBePushed(--x, y))
+   {
+       a->setPushedBoulder();
+       moveBoulder(left);
+       return true;
+   }else if(dir==up && canBePushed(x, ++y))
+   {
+       a->setPushedBoulder();
+       moveBoulder(up);
+       return true;
+   }else if(dir==down && canBePushed(x, --y))
+   {
+       a->setPushedBoulder();
+       moveBoulder(down);
+       return true;
+   }
+    
+    return false;
 }
 
-bool Boulders::canBePushed(int x, int y, Direction dir)
+bool Boulders::bulletWillHarm(Actor* a)
+{
+    if(getHitPoints()>2)
+        decrementHitPoints(2);
+    else
+        setDead();
+    return true;
+}
+
+bool Boulders::canBePushed(int x, int y)
 {
     
     //can only move if there is a space or a hole
@@ -402,7 +397,6 @@ bool Boulders::canBePushed(int x, int y, Direction dir)
     {
         if(hp!=nullptr)
         {
-            m_isOnHole=true;
             return true;
         }
     }

@@ -28,18 +28,22 @@ public:
     int getHitPoints();
     void decrementHitPoints(int decreaseby);
     
-    Actor* getspecificActor(int x, int y);
     
-    virtual bool blocks(Actor& a)=0;
+    //Actor* getspecificActor(int x, int y);
     
-
+    virtual bool blocksPlayer(Actor* a, Direction dir)=0;
+    virtual bool bulletWillHarm(Actor* a)=0;
     
+    void setPushedBoulder();
+    bool pushedBoulder();
     
 private:
     StudentWorld* m_actorworld;
     bool m_isDead;
     int m_hitPoints;
     int m_ammo;
+    bool m_pushedBoulder;
+    
     
 };
 
@@ -60,15 +64,16 @@ public:
     int getAmmo();
     void decrementAmmo();
     
-    bool playerCantStep(Actor * ap, int x, int y, Direction dir);
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
+    virtual bool bulletWillHarm(Actor* a);
     
-    virtual bool blocks(Actor& a){ return false;}
-    
+  
 
     
 private:
     int m_lives;
     int m_ammo;
+    
     
     
 };
@@ -110,8 +115,8 @@ public:
     Bullets(int startX, int startY, Direction dir, StudentWorld* world);
     virtual ~Bullets(){}
     virtual void doSomething();
-    bool willDamage(Actor* ap);
-    virtual bool blocks(Actor& a){return true;}
+    virtual bool blocksPlayer(Actor* a, Direction dir){return true;}
+    virtual bool bulletWillHarm(Actor* a){return false;}
     
 };
 
@@ -128,7 +133,8 @@ public:
     Wall(int startX, int startY, StudentWorld* world);
     virtual ~Wall(){}
     virtual void doSomething(){return;}
-    virtual bool blocks(Actor& a){ return true;}
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
+    virtual bool bulletWillHarm(Actor* a){return true;}
     
     
 private:
@@ -140,14 +146,14 @@ class Boulders: public Actor
 public:
     Boulders(int startX, int startY, StudentWorld* world);
     virtual void doSomething();
-    bool canBePushed(int x, int y, Direction dir);
+    bool canBePushed(int x, int y);
     void moveBoulder(Direction dir);
-    virtual bool blocks(Actor& a){ return true;}
-    bool isOnHole();
+    virtual bool blocksPlayer(Actor* a, Direction dir);
+    virtual bool bulletWillHarm(Actor* a);
     
     
 private:
-    bool m_isOnHole;
+    
   
 };
 
@@ -157,10 +163,10 @@ public:
     Holes(int startX, int startY, StudentWorld *world);
     virtual ~Holes(){}
     virtual void doSomething();
-    virtual bool blocks(Actor& a){ return true;}
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
+    virtual bool bulletWillHarm(Actor* a){return false;}
     
 private:
-    Boulders* m_sharesWithBoulder;
 };
 
 //
