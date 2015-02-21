@@ -79,8 +79,6 @@ void StudentWorld::removeDeadGameObjects()
             m_container.erase(itr);
             itr--;
             
-            std::cout<<"yey";
-            
         }
     }
     
@@ -138,7 +136,28 @@ int StudentWorld::init()
             }
             continue;
         
-        }else if(item==Level::empty || item!=Level::player || item!=Level::wall)
+        }else if(item==Level::boulder)
+        {
+            m_container.push_back(new Boulders(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+            
+        }else if(item==Level::hole)
+        {
+            m_container.push_back(new Holes(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::empty || item!=Level::player || item!=Level::wall|| item!=Level::boulder)
         {
             x++;
             if(x==15 && y<15)
@@ -165,7 +184,8 @@ int StudentWorld:: move()
         
         if(playerCompletedLevel())
             return GWSTATUS_FINISHED_LEVEL;
-    }
+    }else
+        return GWSTATUS_PLAYER_DIED;
     
     vector<Actor*>::iterator itr;
     for(itr=m_container.begin(); itr!=m_container.end(); itr++)

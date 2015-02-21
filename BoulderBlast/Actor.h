@@ -14,7 +14,7 @@
 class Actor: public GraphObject
 {
 public:
-    Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world);
+    Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int startingHitPoints);
     virtual ~Actor()
     {
         //getGraphObjects().erase(this);
@@ -25,26 +25,18 @@ public:
     bool isDead();
     void setDead();
     
-    //accessor
-    
+    int getHitPoints();
+    void decrementHitPoints(int decreaseby);
     
     
 private:
     StudentWorld* m_actorworld;
     bool m_isDead;
+    int m_hitPoints;
+    int m_ammo;
     
 };
 
-//class ThingsThatShoot: public Actor
-//{
-//public:
-//    ThingsThatShoot(int imageID, int startX, int startY, Direction dir, StudentWorld* world);
-//    virtual ~ThingsThatShoot()
-//    {
-//    }
-//
-//    
-//};
 
 class Player: public Actor
 {
@@ -56,22 +48,19 @@ public:
     }
     virtual void doSomething();
     
-    //mutator
-    int numLives();
-    int hitPoints(bool gotShot);
-    bool gotHit(bool gotHit);
+    void decrementLives();
+    int getNumLives();
     
-    //accessors
+    int getAmmo();
+    void decrementAmmo();
     
-    int roundAmmunition();
+    bool playerCantStep(Actor * ap, int x, int y, Direction dir);
     
     
     
 private:
-    
-    bool m_gotHit;
-    int m_hitPoints;
-    int m_roundAmmunition;
+    int m_lives;
+    int m_ammo;
     
     
 };
@@ -136,19 +125,26 @@ private:
     
 };
 
-//class Boulders: public Actor
-//{
-//public:
-//    Boulders(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
-//class Holes: public Actor
-//{
-//public:
-//    Holes(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
+class Boulders: public Actor
+{
+public:
+    Boulders(int startX, int startY, StudentWorld* world);
+    virtual void doSomething();
+    bool canBePushed(int x, int y, Direction dir);
+    void moveBoulder(Direction dir);
+    
+private:
+  
+};
+
+class Holes: public Actor
+{
+public:
+    Holes(int startX, int startY, StudentWorld *world);
+    virtual ~Holes(){}
+    virtual void doSomething();
+};
+
 //
 //class Jewels: public Actor
 //{
