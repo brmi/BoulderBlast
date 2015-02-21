@@ -28,6 +28,12 @@ public:
     int getHitPoints();
     void decrementHitPoints(int decreaseby);
     
+    Actor* getspecificActor(int x, int y);
+    
+    virtual bool blocks(Actor& a)=0;
+    
+
+    
     
 private:
     StudentWorld* m_actorworld;
@@ -56,7 +62,9 @@ public:
     
     bool playerCantStep(Actor * ap, int x, int y, Direction dir);
     
+    virtual bool blocks(Actor& a){ return false;}
     
+
     
 private:
     int m_lives;
@@ -103,6 +111,7 @@ public:
     virtual ~Bullets(){}
     virtual void doSomething();
     bool willDamage(Actor* ap);
+    virtual bool blocks(Actor& a){return true;}
     
 };
 
@@ -119,6 +128,7 @@ public:
     Wall(int startX, int startY, StudentWorld* world);
     virtual ~Wall(){}
     virtual void doSomething(){return;}
+    virtual bool blocks(Actor& a){ return true;}
     
     
 private:
@@ -132,8 +142,12 @@ public:
     virtual void doSomething();
     bool canBePushed(int x, int y, Direction dir);
     void moveBoulder(Direction dir);
+    virtual bool blocks(Actor& a){ return true;}
+    bool isOnHole();
+    
     
 private:
+    bool m_isOnHole;
   
 };
 
@@ -143,6 +157,10 @@ public:
     Holes(int startX, int startY, StudentWorld *world);
     virtual ~Holes(){}
     virtual void doSomething();
+    virtual bool blocks(Actor& a){ return true;}
+    
+private:
+    Boulders* m_sharesWithBoulder;
 };
 
 //

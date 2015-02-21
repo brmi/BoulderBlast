@@ -12,6 +12,15 @@ Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* w
     m_isDead=false;
 }
 
+Actor* Actor::getspecificActor(int x, int y)
+{
+    Actor* ptr;
+        if((ptr->getX() ==x && ptr->getY()==y))
+            return ptr;
+
+    return nullptr;
+}
+
 bool Actor::isDead()
 {
     return m_isDead;
@@ -55,6 +64,7 @@ int Player::getNumLives()
 {
     return m_lives;
 }
+
 
 void Player::decrementLives()
 {
@@ -121,6 +131,7 @@ void Player::doSomething()
     int ch;
     
     StudentWorld *stud= getWorld();
+    
 
     if(getWorld()->getKey(ch))
     {
@@ -195,7 +206,7 @@ void Player::doSomething()
                     Actor* ap= stud->getActor(x,--y);
                     if(ap!=nullptr)
                     {
-                        if(playerCantStep(ap, x, y, dir))
+                        if(playerCantStep(ap, x, y, dir)) 
                             return;
                     }
                     moveTo(x, y);
@@ -336,9 +347,26 @@ Holes::Holes(int x, int y, StudentWorld* world):Actor(IID_HOLE, x, y, none, worl
 
 void Holes::doSomething()
 {
+    int x=getX();
+    int y= getY();
+    
     if(isDead())
         return;
     
+    StudentWorld *stud= getWorld();
+    Actor* ap= stud->getActor(x,y);
+    Boulders* bp=dynamic_cast<Boulders*>(ap);
+    
+    if(bp!=nullptr)
+        cout<<"recognized";
+    
+    if(ap!=nullptr && bp!=nullptr) //if spot has boulder, kill boulder and hole
+    {
+        setDead();
+        bp->setDead();
+    }
+    
+
 }
 
 
@@ -348,7 +376,13 @@ void Holes::doSomething()
 
 Boulders::Boulders(int startX, int startY, StudentWorld* world): Actor(IID_BOULDER, startX, startY, none, world, 10)
 {
+    m_isOnHole=false;
     setVisible(true);
+}
+
+bool Boulders::isOnHole()
+{
+    return m_isOnHole;
 }
 
 bool Boulders::canBePushed(int x, int y, Direction dir)
@@ -368,7 +402,7 @@ bool Boulders::canBePushed(int x, int y, Direction dir)
     {
         if(hp!=nullptr)
         {
-            moveBoulder(dir);
+            m_isOnHole=true;
             return true;
         }
     }
@@ -380,47 +414,34 @@ void Boulders::doSomething()
     
 }
 
+
+
 void Boulders::moveBoulder(Direction dir)
 {
     int x= getX();
     int y= getY();
-    
-    StudentWorld *stud= getWorld();
+
     
         if(dir==right)
         {
-            Actor* ap= stud->getActor(++x,y);
-            Holes* hp=dynamic_cast<Holes*>(ap);
-            if(ap!=nullptr && hp!=nullptr) //if spot has hole, kill boulder
-                setDead();
-            moveTo(x, y);
+
+            moveTo(++x, y);
             return;
         }
         if(dir==left)
         {
-            Actor* ap= stud->getActor(--x,y);
-            Holes* hp=dynamic_cast<Holes*>(ap);
-            if(ap!=nullptr && hp!=nullptr) //if spot has hole, kill boulder
-                setDead();
-            moveTo(x, y);
+            
+            moveTo(--x, y);
             return;
         }
         if(dir==up)
         {
-            Actor* ap= stud->getActor(x,++y);
-            Holes* hp=dynamic_cast<Holes*>(ap);
-            if(ap!=nullptr && hp!=nullptr) //if spot has hole, kill boulder
-                setDead();
-            moveTo(x, y);
+            moveTo(x, ++y);
             return;
         }
         if(dir==down)
         {
-            Actor* ap= stud->getActor(x,--y);
-            Holes* hp=dynamic_cast<Holes*>(ap);
-            if(ap!=nullptr && hp!=nullptr) //if spot has hole, kill boulder
-                setDead();
-            moveTo(x, y);
+            moveTo(x, --y);
             return;
         }
 }

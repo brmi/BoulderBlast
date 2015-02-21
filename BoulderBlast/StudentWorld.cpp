@@ -157,7 +157,7 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
-        }else if(item==Level::empty || item!=Level::player || item!=Level::wall|| item!=Level::boulder)
+        }else if(item==Level::empty || item!=Level::player || item!=Level::wall|| item!=Level::boulder || item!=Level::hole)
         {
             x++;
             if(x==15 && y<15)
