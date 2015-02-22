@@ -10,18 +10,7 @@ Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* w
     m_hitPoints=startingHitPoints;
     m_actorworld=world;
     m_isDead=false;
-    m_pushedBoulder=false;
-}
 
-
-bool Actor::pushedBoulder()
-{
-    return m_pushedBoulder;
-}
-
-void Actor::setPushedBoulder()
-{
-    m_pushedBoulder=true;
 }
 
 bool Actor::isDead()
@@ -129,9 +118,6 @@ void Player::doSomething()
                         if(ap->blocksPlayer(ap, dir))
                             return;
                     }
-                    if(pushedBoulder())
-                    moveTo(--x, y);
-                    else
                         moveTo(x, y);
                 }else
                 {
@@ -319,16 +305,13 @@ void Holes::doSomething()
     Actor* ap= stud->getActor(x,y);
     Boulders* bp=dynamic_cast<Boulders*>(ap);
     
+//    if(bp!=nullptr)
+//        cout<<"recognized";
     if(bp!=nullptr)
-        cout<<"recognized";
-    
-    if(ap!=nullptr && bp!=nullptr) //if spot has boulder, kill boulder and hole
     {
         setDead();
         bp->setDead();
     }
-    
-
 }
 
 
@@ -348,27 +331,23 @@ bool Boulders::blocksPlayer(Actor *a, Direction dir)
 
    if(dir==right && canBePushed(++x, y))
    {
-       a->setPushedBoulder();
        moveBoulder(right);
-       return true;
+       return false;
    }else if(dir==left && canBePushed(--x, y))
    {
-       a->setPushedBoulder();
        moveBoulder(left);
-       return true;
+       return false;
    }else if(dir==up && canBePushed(x, ++y))
    {
-       a->setPushedBoulder();
        moveBoulder(up);
-       return true;
+       return false;
    }else if(dir==down && canBePushed(x, --y))
    {
-       a->setPushedBoulder();
        moveBoulder(down);
-       return true;
+       return false;
    }
     
-    return false;
+    return true;
 }
 
 bool Boulders::bulletWillHarm(Actor* a)
@@ -397,6 +376,7 @@ bool Boulders::canBePushed(int x, int y)
     {
         if(hp!=nullptr)
         {
+            //hp->killHole(hp);
             return true;
         }
     }
@@ -439,5 +419,31 @@ void Boulders::moveBoulder(Direction dir)
             return;
         }
 }
+//////////
+//JEWELS//
+/////////
 
+Jewels::Jewels(int startX, int startY, StudentWorld* world):Actor(IID_JEWEL, startX, startY, none, world, 0)
+{
+    setVisible(true);
+}
 
+void Jewels::doSomething()
+{
+    if(isDead())
+        return;
+    
+}
+
+////////
+//EXIT//
+///////
+Exit::Exit(int startX, int startY, StudentWorld* world):Actor(IID_EXIT, startX, startY, none, world, 0)
+{
+    
+}
+
+void Exit::doSomething()
+{
+    return;
+}

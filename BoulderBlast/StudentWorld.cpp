@@ -20,13 +20,12 @@ StudentWorld::~StudentWorld()
     delete m_playerContainer;
     
     vector<Actor*>::iterator it;
-    vector<Actor*>::iterator temp;
+    
     for(it=m_container.begin(); it!=m_container.end(); it++)
     {
-        temp=it;
-        m_container.erase(it); //decrease vector size
+        
+        it=m_container.erase(it);
         delete (*it); //delete Actor
-        it=temp;
     }
 }
 
@@ -157,6 +156,17 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
+           
+        } else if(item==Level::jewel)
+        {
+            m_container.push_back(new Jewels(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
         }else if(item==Level::empty || item!=Level::player || item!=Level::wall|| item!=Level::boulder || item!=Level::hole)
         {
             x++;
@@ -217,6 +227,11 @@ void StudentWorld::cleanUp()
     delete m_playerContainer;
     
     vector<Actor*>::iterator it;
+   
     for(it=m_container.begin(); it!=m_container.end(); it++)
-        delete (*it); //come back...did you delete everything?
+    {
+        
+        it=m_container.erase(it);
+        delete (*it); //delete Actor
+    }
 }

@@ -33,16 +33,17 @@ public:
     
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool bulletWillHarm(Actor* a)=0;
+
+
+
     
-    void setPushedBoulder();
-    bool pushedBoulder();
     
 private:
     StudentWorld* m_actorworld;
     bool m_isDead;
     int m_hitPoints;
     int m_ammo;
-    bool m_pushedBoulder;
+
     
     
 };
@@ -67,7 +68,6 @@ public:
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm(Actor* a);
     
-  
 
     
 private:
@@ -120,12 +120,15 @@ public:
     
 };
 
-//class Exit : public Actor
-//{
-//public:
-//    Exit(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
+class Exit : public Actor
+{
+public:
+    Exit(int startX, int startY, StudentWorld* stud);
+    virtual ~Exit(){}
+    virtual void doSomething();
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
+    virtual bool bulletWillHarm(Actor* a){return false;}
+};
 
 class Wall: public Actor
 {
@@ -145,11 +148,14 @@ class Boulders: public Actor
 {
 public:
     Boulders(int startX, int startY, StudentWorld* world);
+    virtual ~Boulders(){};
     virtual void doSomething();
     bool canBePushed(int x, int y);
     void moveBoulder(Direction dir);
     virtual bool blocksPlayer(Actor* a, Direction dir);
     virtual bool bulletWillHarm(Actor* a);
+   
+    
     
     
 private:
@@ -166,17 +172,23 @@ public:
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm(Actor* a){return false;}
     
+    
+    
 private:
+
 };
 
-//
-//class Jewels: public Actor
-//{
-//public:
-//    Jewels(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
+
+class Jewels: public Actor
+{
+public:
+    Jewels(int startX, int startY, StudentWorld *world);
+    virtual ~Jewels(){}
+    virtual void doSomething();
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
+    virtual bool bulletWillHarm(Actor* a){return false;}
+};
+
 //class RestoreHealthGoodies: public Actor
 //{
 //public:
