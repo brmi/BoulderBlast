@@ -26,16 +26,14 @@ public:
     void setDead();
     
     int getHitPoints();
-    void decrementHitPoints(int decreaseby);
-    
-    
-    //Actor* getspecificActor(int x, int y);
+    virtual void decrementHitPoints(int decreaseby);
+    virtual void increaseHitPoints(int increaseby);
     
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool bulletWillHarm(Actor* a)=0;
-
-
-
+    
+    
+    
     
     
 private:
@@ -43,8 +41,17 @@ private:
     bool m_isDead;
     int m_hitPoints;
     int m_ammo;
-
     
+    
+    
+};
+
+class Items: public Actor
+{
+public:
+    Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
+    
+private:
     
 };
 
@@ -68,7 +75,7 @@ public:
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm(Actor* a);
     
-
+    
     
 private:
     int m_lives;
@@ -154,13 +161,13 @@ public:
     void moveBoulder(Direction dir);
     virtual bool blocksPlayer(Actor* a, Direction dir);
     virtual bool bulletWillHarm(Actor* a);
-   
+    
     
     
     
 private:
     
-  
+    
 };
 
 class Holes: public Actor
@@ -175,14 +182,14 @@ public:
     
     
 private:
-
+    
 };
 
 
-class Jewels: public Actor
+class Jewels: public Items
 {
 public:
-    Jewels(int startX, int startY, StudentWorld *world);
+    Jewels(int startX, int startY,StudentWorld *world);
     virtual ~Jewels(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}

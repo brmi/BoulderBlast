@@ -6,7 +6,7 @@ using namespace std;
 
 GameWorld* createStudentWorld(string assetDir)
 {
-	return new StudentWorld(assetDir);
+    return new StudentWorld(assetDir);
 }
 
 // Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp
@@ -21,33 +21,41 @@ StudentWorld::~StudentWorld()
     
     vector<Actor*>::iterator it;
     
-    for(it=m_container.begin(); it!=m_container.end(); it++)
+    for(it=m_container.begin(); it!=m_container.end();)
     {
-        
-        it=m_container.erase(it);
         delete (*it); //delete Actor
+        it=m_container.erase(it);
     }
 }
 
-vector<Actor*> StudentWorld::getActorContainer()
+vector<Actor*>* StudentWorld::getActorContainer()
 {
-    return m_container;
+    vector<Actor*> *ptr =&m_container;
+    return ptr;
 }
 
-//Actor* StudentWorld::getActor(int x, int y)
-//{
-//    vector<Actor*> ptr = getActorContainer();
-//    vector<Actor*>::iterator itr;
-//    for(itr=ptr.begin(); itr!=ptr.end();)
-//    {
-//    
-//        if((*itr)->getX() ==x && (*itr)->getY()==y)
-//            return (*itr);
-//        else
-//            itr++;
-//    }
-//    return nullptr;
-//}
+Actor* StudentWorld::getActor(int x, int y)
+{
+    Actor* actr=nullptr;
+    vector<Actor*>* ptr = getActorContainer();
+    vector<Actor*>::iterator itr;
+    for(itr=(*ptr).begin(); itr!=(*ptr).end();itr++)
+    {
+        
+        if((*itr)->getX() ==x && (*itr)->getY()==y)
+        {
+            Boulders* bp = dynamic_cast<Boulders*>(*itr); //return boulder highest precedence
+            Wall* wp=dynamic_cast<Wall*>(*itr);
+            if(bp!=nullptr)
+                return (*itr);
+            else if(wp!=nullptr)
+                return (*itr);
+            else
+                actr=(*itr);
+        }
+    }
+    return actr; //this will return the actual actor
+}
 
 bool StudentWorld::playerDied()
 {
@@ -75,7 +83,7 @@ void StudentWorld::removeDeadGameObjects()
         if((*itr)->isDead()==true)
         {
             delete *itr;
-            m_container.erase(itr);
+            itr=m_container.erase(itr);
             itr--;
             
         }
@@ -85,9 +93,7 @@ void StudentWorld::removeDeadGameObjects()
 
 void StudentWorld::makeBullet(int x, int y, GraphObject::Direction dir)
 {
-    
     m_container.push_back(new Bullets(x,y,dir, this));
-    
 }
 
 int StudentWorld::init()
@@ -134,7 +140,7 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
-        
+            
         }else if(item==Level::boulder)
         {
             m_container.push_back(new Boulders(x,y,this));
@@ -156,7 +162,7 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
-           
+            
         } else if(item==Level::jewel)
         {
             m_container.push_back(new Jewels(x,y,this));
@@ -177,9 +183,9 @@ int StudentWorld::init()
             }
             continue;
         }
-       
+        
     }
-            
+    
     return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -203,10 +209,10 @@ int StudentWorld:: move()
         if((*itr)->isDead()==false)
         {
             (*itr)->doSomething();
-        
+            
             if(playerDied())
                 return GWSTATUS_PLAYER_DIED;
-        
+            
             if(playerCompletedLevel())
                 return GWSTATUS_FINISHED_LEVEL;
         }
@@ -217,7 +223,7 @@ int StudentWorld:: move()
     
     
     
-
+    
     
     return GWSTATUS_CONTINUE_GAME;
 }
@@ -227,11 +233,10 @@ void StudentWorld::cleanUp()
     delete m_playerContainer;
     
     vector<Actor*>::iterator it;
-   
-    for(it=m_container.begin(); it!=m_container.end(); it++)
+    
+    for(it=m_container.begin(); it!=m_container.end();)
     {
-        
-        it=m_container.erase(it);
         delete (*it); //delete Actor
+        it=m_container.erase(it);
     }
 }

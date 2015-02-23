@@ -10,7 +10,7 @@ Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* w
     m_hitPoints=startingHitPoints;
     m_actorworld=world;
     m_isDead=false;
-
+    
 }
 
 bool Actor::isDead()
@@ -34,6 +34,10 @@ void Actor::decrementHitPoints(int decreaseby)
     m_hitPoints-=decreaseby;
 }
 
+void Actor::increaseHitPoints(int increaseby)
+{
+    m_hitPoints+=increaseby;
+}
 
 StudentWorld* Actor::getWorld() const
 {
@@ -46,7 +50,7 @@ StudentWorld* Actor::getWorld() const
 
 Player::Player(int startX, int startY, StudentWorld* world):Actor(IID_PLAYER, startX, startY, right, world, 20)
 {
-  
+    
     m_lives=3;
     m_ammo=20;
     setVisible(true);
@@ -95,12 +99,12 @@ void Player::doSomething()
     int x=getX();
     int y=getY();
     Direction dir=getDirection();
-
+    
     int ch;
     
     StudentWorld *stud= getWorld();
     
-
+    
     if(getWorld()->getKey(ch))
     {
         switch(ch)
@@ -112,26 +116,13 @@ void Player::doSomething()
                         setDirection(left);
                     dir=left;
                     
-                    //Actor* ap= stud->getActor(--x,y); //this gives me actor at specific location!
-                    
-                    //StudentWorld *stud= getWorld();
-                    
-                    vector<Actor*> ptr= stud->getActorContainer();
-                    
-                    vector<Actor*>::iterator itr;
-                    
-                    for(itr=ptr.begin(); itr!=ptr.end();)
+                    Actor* ap= stud->getActor(--x,y); //this gives me actor at specific location!
+                    if(ap!=nullptr)
                     {
-                        
-                        if((*itr)->getX() ==--x && (*itr)->getY()==y)
-                        {
-                            if((*itr)->blocksPlayer(*itr, dir))
-                               return;
-                        }
-                        else
-                            itr++;
+                        if(ap->blocksPlayer(ap, dir))
+                            return;
                     }
-                    moveTo(x,y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=left)
@@ -145,22 +136,13 @@ void Player::doSomething()
                         setDirection(right);
                     
                     dir=right;
-                    vector<Actor*> ptr= stud->getActorContainer();
-                    
-                    vector<Actor*>::iterator itr;
-                    
-                    for(itr=ptr.begin(); itr!=ptr.end();)
+                    Actor* ap= stud->getActor(++x,y);
+                    if(ap!=nullptr)
                     {
-                        
-                        if((*itr)->getX() ==++x && (*itr)->getY()==y)
-                        {
-                            if((*itr)->blocksPlayer(*itr, dir))
-                                return;
-                        }
-                        else
-                            itr++;
+                        if(ap->blocksPlayer(ap, dir))
+                            return;
                     }
-                     moveTo(x,y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=right)
@@ -174,22 +156,13 @@ void Player::doSomething()
                         setDirection(up);
                     
                     dir=up;
-                    vector<Actor*> ptr= stud->getActorContainer();
-                    
-                    vector<Actor*>::iterator itr;
-                    
-                    for(itr=ptr.begin(); itr!=ptr.end();)
+                    Actor* ap= stud->getActor(x,++y);
+                    if(ap!=nullptr)
                     {
-                        
-                        if((*itr)->getX() ==x && (*itr)->getY()==--y)
-                        {
-                            if((*itr)->blocksPlayer(*itr, dir))
-                                return;
-                        }
-                        else
-                            itr++;
+                        if(ap->blocksPlayer(ap, dir))
+                            return;
                     }
-                     moveTo(x,y);
+                    moveTo(x, y);
                 }else
                 {
                     if(getDirection()!=up)
@@ -202,20 +175,11 @@ void Player::doSomething()
                     if(getDirection()!=down)
                         setDirection(down);
                     dir=down;
-                    vector<Actor*> ptr= stud->getActorContainer();
-                    
-                    vector<Actor*>::iterator itr;
-                    
-                    for(itr=ptr.begin(); itr!=ptr.end();)
+                    Actor* ap= stud->getActor(x,--y);
+                    if(ap!=nullptr)
                     {
-                        
-                        if((*itr)->getX() ==x && (*itr)->getY()==++y)
-                        {
-                            if((*itr)->blocksPlayer(*itr, dir))
-                                return;
-                        }
-                        else
-                            itr++;
+                        if(ap->blocksPlayer(ap, dir))
+                            return;
                     }
                     moveTo(x, y);
                 }else
@@ -225,7 +189,7 @@ void Player::doSomething()
                 }
                 break;
             case KEY_PRESS_ESCAPE:
-                ;
+                setDead();
                 break;
             case KEY_PRESS_SPACE:
                 decrementAmmo();
@@ -269,104 +233,58 @@ void Bullets::doSomething()
     
     int x=getX();
     int y=getY();
-  
+    
     StudentWorld *stud= getWorld();
-    //Actor* ap= stud->getActor(x,y);
+    Actor* ap= stud->getActor(x,y);
     
-    vector<Actor*> ptr= stud->getActorContainer();
-    
-    vector<Actor*>::iterator itr;
-    
-    for(itr=ptr.begin(); itr!=ptr.end();)
+    if(ap!=nullptr)
     {
-        
-        if((*itr)->getX() ==x && (*itr)->getY()==y)
+        if(ap->bulletWillHarm(ap))
         {
-            if((*itr)->bulletWillHarm(*itr))
-            {
-                setDead();
-                return;
-            }
+            setDead();
+            return;
         }
-        else
-            itr++;
     }
-    
     
     if(getDirection()==up)
     {
         moveTo(x,++y);
-        for(itr=ptr.begin(); itr!=ptr.end();)
+        Actor* lp=stud->getActor(x,y);
+        if(lp->bulletWillHarm(lp))
         {
-            
-            if((*itr)->getX() ==x && (*itr)->getY()==y)
-            {
-                if((*itr)->bulletWillHarm(*itr))
-                {
-                    setDead();
-                    return;
-                }
-            }
-            else
-                itr++;
+            setDead();
+            return;
         }
     }
     if(getDirection()==down)
     {
         moveTo(x,--y);
-        for(itr=ptr.begin(); itr!=ptr.end();)
+        Actor* lp=stud->getActor(x,y);
+        if(lp->bulletWillHarm(lp))
         {
-            
-            if((*itr)->getX() ==x && (*itr)->getY()==y)
-            {
-                if((*itr)->bulletWillHarm(*itr))
-                {
-                    setDead();
-                    return;
-                }
-            }
-            else
-                itr++;
+            setDead();
+            return;
         }
-
     }
     if(getDirection()==right)
     {
         moveTo(++x, y);
-        for(itr=ptr.begin(); itr!=ptr.end();)
+        Actor* lp=stud->getActor(x,y);
+        if(lp->bulletWillHarm(lp))
         {
-            
-            if((*itr)->getX() ==x && (*itr)->getY()==y)
-            {
-                if((*itr)->bulletWillHarm(*itr))
-                {
-                    setDead();
-                    return;
-                }
-            }
-            else
-                itr++;
+            setDead();
+            return;
         }
-
     }
     if(getDirection()==left)
     {
         moveTo(--x, y);
-        for(itr=ptr.begin(); itr!=ptr.end();)
+        Actor* lp=stud->getActor(x,y);
+        if(lp->bulletWillHarm(lp))
         {
-            
-            if((*itr)->getX() ==x && (*itr)->getY()==y)
-            {
-                if((*itr)->bulletWillHarm(*itr))
-                {
-                    setDead();
-                    return;
-                }
-            }
-            else
-                itr++;
+            setDead();
+            return;
         }
-
     }
 }
 
@@ -389,31 +307,18 @@ void Holes::doSomething()
     
     StudentWorld *stud= getWorld();
     
-    vector<Actor*> ptr= stud->getActorContainer();
+    Actor* ap= stud->getActor(x,y);
     
-    vector<Actor*>::iterator itr;
+    Boulders* bp=dynamic_cast<Boulders*>(ap);
     
-    for(itr=ptr.begin(); itr!=ptr.end();)
+    //    if(bp!=nullptr)
+    //        cout<<"recognized";
+    
+    if(bp!=nullptr)
     {
-        
-        if((*itr)->getX() ==x && (*itr)->getY()==y)
-        {
-            Boulders* bp= dynamic_cast<Boulders*>(*itr);
-            if(bp!=nullptr)
-            {
-                setDead();
-                bp->setDead();
-            }
-        }
-        else
-            itr++;
+        setDead();
+        bp->setDead();
     }
-    
-    
-    
-//    if(bp!=nullptr)
-//        cout<<"recognized";
-   
 }
 
 
@@ -430,24 +335,24 @@ bool Boulders::blocksPlayer(Actor *a, Direction dir)
 {
     int x=getX();
     int y=getY();
-
-   if(dir==right && canBePushed(++x, y))
-   {
-       moveBoulder(right);
-       return false;
-   }else if(dir==left && canBePushed(--x, y))
-   {
-       moveBoulder(left);
-       return false;
-   }else if(dir==up && canBePushed(x, ++y))
-   {
-       moveBoulder(up);
-       return false;
-   }else if(dir==down && canBePushed(x, --y))
-   {
-       moveBoulder(down);
-       return false;
-   }
+    
+    if(dir==right && canBePushed(++x, y))
+    {
+        moveBoulder(right);
+        return false;
+    }else if(dir==left && canBePushed(--x, y))
+    {
+        moveBoulder(left);
+        return false;
+    }else if(dir==up && canBePushed(x, ++y))
+    {
+        moveBoulder(up);
+        return false;
+    }else if(dir==down && canBePushed(x, --y))
+    {
+        moveBoulder(down);
+        return false;
+    }
     
     return true;
 }
@@ -466,48 +371,23 @@ bool Boulders::canBePushed(int x, int y)
     
     //can only move if there is a space or a hole
     StudentWorld *stud= getWorld();
-    //Actor* ap= stud->getActor(x,y);
+    Actor* ap= stud->getActor(x,y);
+    Holes* hp=dynamic_cast<Holes*>(ap);
     
-    
-    //StudentWorld *stud= getWorld();
-    
-    vector<Actor*> ptr= stud->getActorContainer();
-    
-    vector<Actor*>::iterator itr;
-    
-    for(itr=ptr.begin(); itr!=ptr.end();)
+    if(ap==nullptr)
     {
-        
-        if((*itr)->getX() ==x && (*itr)->getY()==y)
-        {
-            Holes* hp= dynamic_cast<Holes*>(*itr);
-            if(hp!=nullptr)
-            {
-                return false;
-            }
-        }
-        else
-            itr++;
+        return true;
     }
-
-    return true;
-//    
-//    //Holes* hp=dynamic_cast<Holes*>(ap);
-//    
-//    if(ap==nullptr)
-//    {
-//        return true;
-//    }
-//
-//    if(ap!=nullptr)
-//    {
-//        if(hp!=nullptr)
-//        {
-//            //hp->killHole(hp);
-//            return true;
-//        }
-//    }
-//    return false;
+    
+    if(ap!=nullptr)
+    {
+        if(hp!=nullptr)
+        {
+            //hp->killHole(hp);
+            return true;
+        }
+    }
+    return false;
 }
 
 void Boulders::doSomething()
@@ -521,36 +401,47 @@ void Boulders::moveBoulder(Direction dir)
 {
     int x= getX();
     int y= getY();
-
     
-        if(dir==right)
-        {
-
-            moveTo(++x, y);
-            return;
-        }
-        if(dir==left)
-        {
-            
-            moveTo(--x, y);
-            return;
-        }
-        if(dir==up)
-        {
-            moveTo(x, ++y);
-            return;
-        }
-        if(dir==down)
-        {
-            moveTo(x, --y);
-            return;
-        }
+    
+    if(dir==right)
+    {
+        
+        moveTo(++x, y);
+        return;
+    }
+    if(dir==left)
+    {
+        
+        moveTo(--x, y);
+        return;
+    }
+    if(dir==up)
+    {
+        moveTo(x, ++y);
+        return;
+    }
+    if(dir==down)
+    {
+        moveTo(x, --y);
+        return;
+    }
 }
+
+/////////
+//ITEMS//
+////////
+Items::Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints):Actor(imageID, startX, startY, dir, world, startingHitPoints)
+{
+    
+}
+
+
+
 //////////
 //JEWELS//
 /////////
 
-Jewels::Jewels(int startX, int startY, StudentWorld* world):Actor(IID_JEWEL, startX, startY, none, world, 0)
+Jewels::Jewels(int startX, int startY,StudentWorld *world):Items(IID_JEWEL, startX, startY, none, world, 0)
 {
     setVisible(true);
 }

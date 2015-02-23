@@ -23,13 +23,12 @@ public:
     ~StudentWorld();
     
     virtual int init();
-
+    
     virtual int move();
-
+    
     virtual void cleanUp();
     
-   
-//    Actor* getActor(int x, int y);
+    Actor* getActor(int x, int y);
     
     bool playerDied();
     
@@ -41,15 +40,15 @@ public:
     
     
     //accessor
-    std::vector<Actor*> getActorContainer();
+    std::vector<Actor*>* getActorContainer();
     
-
-
+    
+    
 private:
     
     std::vector<Actor*> m_container;         //container for my objects
     Player* m_playerContainer;   //holds where player is
- 
+    
     
 };
 
