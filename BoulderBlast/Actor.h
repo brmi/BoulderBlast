@@ -31,18 +31,12 @@ public:
     
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool bulletWillHarm(Actor* a)=0;
-    
-    
-    
-    
-    
+   
 private:
     StudentWorld* m_actorworld;
     bool m_isDead;
     int m_hitPoints;
     int m_ammo;
-    
-    
     
 };
 
@@ -50,7 +44,7 @@ class Items: public Actor
 {
 public:
     Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
-    
+    //brmi add
 private:
     
 };
@@ -202,14 +196,14 @@ public:
 //    RestoreHealthGoodies(int imageID, int startX, int startY, Direction dir);
 //    virtual void doSomething();
 //};
-//
-//class ExtraLifeGoodies: public Actor
-//{
-//public:
-//    ExtraLifeGoodies(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
+
+class ExtraLifeGoodies: public Items
+{
+public:
+    ExtraLifeGoodies(int imageID, int startX, int startY, Direction dir);
+    virtual void doSomething();
+};
+
 //class AmmoGoodies: public Actor
 //{
 //public:

@@ -32,15 +32,20 @@ public:
     
     bool playerDied();
     
+    void setPlayerCompletedLevel();
+    
     bool playerCompletedLevel();
     
     void removeDeadGameObjects();
     
     void makeBullet(int x, int y, GraphObject::Direction dir);
     
+    int numJewels();
+    void decNumJewels();
     
     //accessor
     std::vector<Actor*>* getActorContainer();
+    Player* getPlayer();
     
     
     
@@ -48,6 +53,8 @@ private:
     
     std::vector<Actor*> m_container;         //container for my objects
     Player* m_playerContainer;   //holds where player is
+    int m_numJewels;
+    bool m_playerCompletedLvl;
     
     
 };

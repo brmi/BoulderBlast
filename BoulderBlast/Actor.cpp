@@ -189,6 +189,7 @@ void Player::doSomething()
                 }
                 break;
             case KEY_PRESS_ESCAPE:
+                decrementLives();
                 setDead();
                 break;
             case KEY_PRESS_SPACE:
@@ -227,7 +228,6 @@ Bullets::Bullets(int startX, int startY, Direction dir, StudentWorld* world):Act
 
 void Bullets::doSomething()
 {
-    
     if(isDead())
         return;
     
@@ -236,6 +236,8 @@ void Bullets::doSomething()
     
     StudentWorld *stud= getWorld();
     Actor* ap= stud->getActor(x,y);
+    
+    stud->playSound(SOUND_PLAYER_FIRE);
     
     if(ap!=nullptr)
     {
@@ -310,9 +312,6 @@ void Holes::doSomething()
     Actor* ap= stud->getActor(x,y);
     
     Boulders* bp=dynamic_cast<Boulders*>(ap);
-    
-    //    if(bp!=nullptr)
-    //        cout<<"recognized";
     
     if(bp!=nullptr)
     {
@@ -435,8 +434,6 @@ Items::Items(int imageID, int startX, int startY,Direction dir, StudentWorld *wo
     
 }
 
-
-
 //////////
 //JEWELS//
 /////////
@@ -448,10 +445,30 @@ Jewels::Jewels(int startX, int startY,StudentWorld *world):Items(IID_JEWEL, star
 
 void Jewels::doSomething()
 {
+    int x=getX();
+    int y=getY();
+    
     if(isDead())
         return;
     
+    StudentWorld* stud=getWorld();
+    Actor* ap=stud->getActor(x, y);
+    Player* hp=dynamic_cast<Player*>(ap);
+    
+    if(ap!=nullptr)
+        if(hp!=nullptr)
+        {
+            stud->decNumJewels();
+            stud->increaseScore(50);
+            setDead();
+            stud->playSound(SOUND_GOT_GOODIE);
+        }
 }
+
+///////////////////////
+//EXTRA LIFE GOODIES//
+/////////////////////
+
 
 ////////
 //EXIT//
@@ -463,5 +480,24 @@ Exit::Exit(int startX, int startY, StudentWorld* world):Actor(IID_EXIT, startX, 
 
 void Exit::doSomething()
 {
-    return;
+    int x=getX();
+    int y=getY();
+    
+    StudentWorld* stud=getWorld();
+    Actor* ap=stud->getActor(x,y);
+    Player* hp=dynamic_cast<Player*>(ap);
+    
+    if(stud->numJewels()==0)
+        setVisible(true);
+    if(ap!=nullptr)
+    {
+        if(stud->numJewels()==0 && hp!=nullptr)
+        {
+            stud->playSound(SOUND_FINISHED_LEVEL);
+            stud->increaseScore(2000);
+            stud->setPlayerCompletedLevel();
+            //do bonus point stuff
+        }
+    }
+    
 }

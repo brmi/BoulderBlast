@@ -12,7 +12,8 @@ GameWorld* createStudentWorld(string assetDir)
 // Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp
 StudentWorld::StudentWorld(std::string assetDir): GameWorld(assetDir)
 {
-    
+    m_numJewels=0;
+    m_playerCompletedLvl=false;
 }
 
 StudentWorld::~StudentWorld()
@@ -34,9 +35,32 @@ vector<Actor*>* StudentWorld::getActorContainer()
     return ptr;
 }
 
+Player* StudentWorld::getPlayer()
+{
+    return m_playerContainer;
+}
+
+int StudentWorld::numJewels()
+{
+    return m_numJewels;
+}
+
+void StudentWorld::decNumJewels()
+{
+    m_numJewels-=1;
+}
+
 Actor* StudentWorld::getActor(int x, int y)
 {
     Actor* actr=nullptr;
+    
+    Actor* playa=getPlayer();
+    if(playa!=nullptr)
+    {
+        if(playa->getX()==x && playa->getY()==y)
+            return playa;
+    }
+    
     vector<Actor*>* ptr = getActorContainer();
     vector<Actor*>::iterator itr;
     for(itr=(*ptr).begin(); itr!=(*ptr).end();itr++)
@@ -65,11 +89,14 @@ bool StudentWorld::playerDied()
     return false;
 }
 
+void StudentWorld::setPlayerCompletedLevel()
+{
+    m_playerCompletedLvl=true;
+}
+
 bool StudentWorld::playerCompletedLevel()
 {
-    if(getLevel()==3) //fix this later lol... basically set equal to last level
-        return true;
-    return false;
+    return m_playerCompletedLvl;
 }
 
 void StudentWorld::removeDeadGameObjects()
@@ -165,6 +192,7 @@ int StudentWorld::init()
             
         } else if(item==Level::jewel)
         {
+            m_numJewels++;
             m_container.push_back(new Jewels(x,y,this));
             x++;
             if(x==15 && y<15)
@@ -173,7 +201,17 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
-        }else if(item==Level::empty || item!=Level::player || item!=Level::wall|| item!=Level::boulder || item!=Level::hole)
+        }else if(item==Level::exit)
+        {
+            m_container.push_back(new Exit(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else
         {
             x++;
             if(x==15 && y<15)
