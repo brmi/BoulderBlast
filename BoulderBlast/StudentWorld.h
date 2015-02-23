@@ -29,7 +29,7 @@ public:
     virtual void cleanUp();
     
    
-    Actor* getActor(int x, int y);
+//    Actor* getActor(int x, int y);
     
     bool playerDied();
     
