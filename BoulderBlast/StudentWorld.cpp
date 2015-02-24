@@ -2,6 +2,10 @@
 #include "Actor.h"
 #include "Level.h"
 #include <string>
+
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetDir)
@@ -9,11 +13,23 @@ GameWorld* createStudentWorld(string assetDir)
     return new StudentWorld(assetDir);
 }
 
-// Students:  Add code to this file (if you wish), StudentWorld.h, Actor.h and Actor.cpp
 StudentWorld::StudentWorld(std::string assetDir): GameWorld(assetDir)
 {
     m_numJewels=0;
     m_playerCompletedLvl=false;
+}
+
+string StudentWorld::format(int score, int level, int lives, int health, int ammo, unsigned int bonus)
+{
+    ostringstream oss;
+    
+    oss.fill('0');
+    
+    oss << "Score: " << setw(7)<< score << "  Level: "<< setw(2)<< level << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(3)<<ammo<<"  Bonus: " << setw(4)<<bonus;
+    
+    string s = oss.str();
+  
+    return s;
 }
 
 StudentWorld::~StudentWorld()
@@ -27,6 +43,23 @@ StudentWorld::~StudentWorld()
         delete (*it); //delete Actor
         it=m_container.erase(it);
     }
+}
+
+void StudentWorld::setDisplayText()
+{
+    int score=1000;
+    int level=1;
+    unsigned int bonus = 2500;
+    int lives= 2;
+    int health=4;
+    int ammo=3;
+    
+    
+    string s = format(score, level, lives, health, ammo, bonus);
+    
+    
+    
+    setGameStatText(s);
 }
 
 vector<Actor*>* StudentWorld::getActorContainer()
@@ -127,6 +160,8 @@ int StudentWorld::init()
 {
     
     
+    m_playerCompletedLvl=false;
+    
     //////////////////////
     //load current level//
     /////////////////////
@@ -190,7 +225,7 @@ int StudentWorld::init()
             }
             continue;
             
-        } else if(item==Level::jewel)
+        }else if(item==Level::jewel)
         {
             m_numJewels++;
             m_container.push_back(new Jewels(x,y,this));
@@ -201,9 +236,39 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
+        }else if(item==Level::extra_life)
+        {
+            m_container.push_back(new ExtraLifeGoodies(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
         }else if(item==Level::exit)
         {
             m_container.push_back(new Exit(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::restore_health)
+        {
+            m_container.push_back(new RestoreHealthGoodies(x,y,this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::ammo)
+        {
+            m_container.push_back(new AmmoGoodies(x,y,this));
             x++;
             if(x==15 && y<15)
             {
@@ -229,6 +294,8 @@ int StudentWorld::init()
 
 int StudentWorld:: move()
 {
+    setDisplayText();
+    
     if(m_playerContainer->isDead()==false)
     {
         m_playerContainer->doSomething();
@@ -258,8 +325,6 @@ int StudentWorld:: move()
     }
     
     removeDeadGameObjects();
-    
-    
     
     
     

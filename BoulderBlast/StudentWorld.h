@@ -38,6 +38,10 @@ public:
     
     void removeDeadGameObjects();
     
+    void setDisplayText();
+    
+    std::string format(int score, int level, int lives, int health, int ammo, unsigned int bonus);
+    
     void makeBullet(int x, int y, GraphObject::Direction dir);
     
     int numJewels();

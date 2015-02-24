@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/StudentWorld.cpp"
-            timestampString = "446371741.454137"
+            timestampString = "446463266.002517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "280"
-            endingLineNumber = "280"
+            startingLineNumber = "343"
+            endingLineNumber = "343"
             landmarkName = "StudentWorld::cleanUp()"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/StudentWorld.cpp"
-            timestampString = "446371741.454137"
+            timestampString = "446463266.002517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "StudentWorld::getActor(int x, int y)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/StudentWorld.cpp"
-            timestampString = "446371741.454137"
+            timestampString = "446463266.002517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "104"
-            endingLineNumber = "104"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "StudentWorld::removeDeadGameObjects()"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/StudentWorld.cpp"
-            timestampString = "446371741.454137"
+            timestampString = "446463266.002517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
+            startingLineNumber = "136"
+            endingLineNumber = "136"
             landmarkName = "StudentWorld::removeDeadGameObjects()"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368749.318431"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
             landmarkName = "Bullets::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -106,11 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368749.318431"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "254"
-            endingLineNumber = "254"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
             landmarkName = "Bullets::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -122,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368803.640661"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "461"
-            endingLineNumber = "461"
+            startingLineNumber = "466"
+            endingLineNumber = "466"
             landmarkName = "Jewels::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -138,11 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368803.640661"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "458"
-            endingLineNumber = "458"
+            startingLineNumber = "463"
+            endingLineNumber = "463"
             landmarkName = "Jewels::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -154,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368803.640661"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
+            startingLineNumber = "464"
+            endingLineNumber = "464"
             landmarkName = "Jewels::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -170,13 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368803.640661"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "445"
-            endingLineNumber = "445"
-            landmarkName = "Jewels::doSomething()"
-            landmarkType = "5">
+            startingLineNumber = "450"
+            endingLineNumber = "450">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -186,11 +184,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446368800.603748"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "460"
-            endingLineNumber = "460"
+            startingLineNumber = "465"
+            endingLineNumber = "465"
             landmarkName = "Jewels::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -202,11 +200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/StudentWorld.cpp"
-            timestampString = "446371741.454137"
+            timestampString = "446463266.002517"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
             landmarkName = "StudentWorld::decNumJewels()"
             landmarkType = "5">
          </BreakpointContent>
@@ -218,11 +216,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446371170.691336"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "484"
-            endingLineNumber = "484"
+            startingLineNumber = "578"
+            endingLineNumber = "578"
             landmarkName = "Exit::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -234,11 +232,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446371275.358005"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "487"
-            endingLineNumber = "487"
+            startingLineNumber = "581"
+            endingLineNumber = "581"
             landmarkName = "Exit::doSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -246,16 +244,110 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "BoulderBlast/Actor.cpp"
-            timestampString = "446371291.187147"
+            timestampString = "446461539.706558"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "477"
-            endingLineNumber = "477"
-            landmarkName = "Exit::doSomething()"
+            startingLineNumber = "571"
+            endingLineNumber = "571"
+            landmarkName = "Exit::Exit(int startX, int startY, StudentWorld* world)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Exit::Exit(int, int, StudentWorld*)"
+                  moduleName = "BoulderBlast"
+                  urlString = "file:///Users/localadmin/Desktop/BoulderBlast/BoulderBlast/Actor.cpp"
+                  timestampString = "446458080.294558"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "477"
+                  endingLineNumber = "477"
+                  offsetFromSymbolStart = "37">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Exit::Exit(int, int, StudentWorld*)"
+                  moduleName = "BoulderBlast"
+                  urlString = "file:///Users/localadmin/Desktop/BoulderBlast/BoulderBlast/Actor.cpp"
+                  timestampString = "446458080.296743"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "479"
+                  endingLineNumber = "479"
+                  offsetFromSymbolStart = "26">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BoulderBlast/StudentWorld.cpp"
+            timestampString = "446463266.002517"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "StudentWorld:: move()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BoulderBlast/Actor.cpp"
+            timestampString = "446461539.706558"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "572"
+            endingLineNumber = "572"
+            landmarkName = "Exit::Exit(int startX, int startY, StudentWorld* world)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BoulderBlast/StudentWorld.cpp"
+            timestampString = "446463266.002517"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "StudentWorld::init()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "BoulderBlast/StudentWorld.cpp"
+            timestampString = "446463266.002517"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
+            landmarkName = "StudentWorld::init()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

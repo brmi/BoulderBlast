@@ -82,6 +82,11 @@ void Player::decrementAmmo()
         m_ammo=0;
 }
 
+void Player::increaseAmmo(int pts)
+{
+    m_ammo+=pts;
+}
+
 
 bool Player::bulletWillHarm(Actor* a)
 {
@@ -469,6 +474,95 @@ void Jewels::doSomething()
 //EXTRA LIFE GOODIES//
 /////////////////////
 
+ExtraLifeGoodies::ExtraLifeGoodies(int startX, int startY,StudentWorld *world):Items(IID_EXTRA_LIFE, startX, startY, none, world, 0)
+{
+    setVisible(true);
+}
+
+void ExtraLifeGoodies::doSomething()
+{
+    int x=getX();
+    int y=getY();
+    
+    if(isDead())
+        return;
+    
+    StudentWorld* stud=getWorld();
+    Actor* ap=stud->getActor(x, y);
+    Player* hp=dynamic_cast<Player*>(ap);
+    
+    if(ap!=nullptr)
+        if(hp!=nullptr)
+        {
+            stud->increaseScore(1000);
+            setDead();
+            stud->playSound(SOUND_GOT_GOODIE);
+            stud->incLives();
+        }
+}
+///////////////////////////
+//RESTORE HEALTH GOODIES//
+/////////////////////////
+
+
+RestoreHealthGoodies::RestoreHealthGoodies(int startX, int startY,StudentWorld *world):Items(IID_RESTORE_HEALTH, startX, startY, none, world, 0)
+{
+    setVisible(true);
+}
+
+void RestoreHealthGoodies::doSomething()
+{
+    int x=getX();
+    int y=getY();
+    
+    if(isDead())
+        return;
+    
+    StudentWorld* stud=getWorld();
+    Actor* ap=stud->getActor(x, y);
+    Player* hp=dynamic_cast<Player*>(ap);
+    
+    if(ap!=nullptr)
+        if(hp!=nullptr)
+        {
+            stud->increaseScore(500);
+            setDead();
+            stud->playSound(SOUND_GOT_GOODIE);
+            while(getHitPoints()!=20)
+                increaseHitPoints(1);
+        }
+}
+
+////////////////
+//AMMO GOODIES//
+///////////////
+AmmoGoodies::AmmoGoodies(int startX, int startY, StudentWorld* world): Items(IID_AMMO, startX, startY, none, world, 0)
+{
+    setVisible(true);
+}
+
+void AmmoGoodies::doSomething()
+{
+    int x=getX();
+    int y=getY();
+    
+    if(isDead())
+        return;
+    
+    StudentWorld* stud=getWorld();
+    Actor* ap=stud->getActor(x, y);
+    Player* hp=dynamic_cast<Player*>(ap);
+    
+    if(ap!=nullptr)
+        if(hp!=nullptr)
+        {
+            stud->increaseScore(100);
+            setDead();
+            stud->playSound(SOUND_GOT_GOODIE);
+            hp->increaseAmmo(20);
+            
+        }
+}
 
 ////////
 //EXIT//
@@ -499,5 +593,4 @@ void Exit::doSomething()
             //do bonus point stuff
         }
     }
-    
 }

@@ -29,6 +29,8 @@ public:
     virtual void decrementHitPoints(int decreaseby);
     virtual void increaseHitPoints(int increaseby);
     
+    
+    
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool bulletWillHarm(Actor* a)=0;
    
@@ -45,6 +47,8 @@ class Items: public Actor
 public:
     Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
     //brmi add
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
+    virtual bool bulletWillHarm(Actor* a){return false;}
 private:
     
 };
@@ -65,6 +69,7 @@ public:
     
     int getAmmo();
     void decrementAmmo();
+    void increaseAmmo(int pts);
     
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm(Actor* a);
@@ -173,8 +178,6 @@ public:
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm(Actor* a){return false;}
     
-    
-    
 private:
     
 };
@@ -186,28 +189,32 @@ public:
     Jewels(int startX, int startY,StudentWorld *world);
     virtual ~Jewels(){}
     virtual void doSomething();
-    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
-    virtual bool bulletWillHarm(Actor* a){return false;}
+    
 };
 
-//class RestoreHealthGoodies: public Actor
-//{
-//public:
-//    RestoreHealthGoodies(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
+class RestoreHealthGoodies: public Items
+{
+public:
+    RestoreHealthGoodies(int startX, int startY, StudentWorld* world);
+    virtual ~RestoreHealthGoodies(){};
+    virtual void doSomething();
+    
+};
 
 class ExtraLifeGoodies: public Items
 {
 public:
-    ExtraLifeGoodies(int imageID, int startX, int startY, Direction dir);
+    ExtraLifeGoodies(int startX, int startY, StudentWorld *world);
+    virtual ~ExtraLifeGoodies(){}
     virtual void doSomething();
+    
 };
 
-//class AmmoGoodies: public Actor
-//{
-//public:
-//    AmmoGoodies(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
+class AmmoGoodies: public Items
+{
+public:
+    AmmoGoodies(int startX, int startY, StudentWorld* world);
+    virtual ~AmmoGoodies(){}
+    virtual void doSomething();
+};
 #endif // ACTOR_H_
