@@ -56,19 +56,6 @@ Player::Player(int startX, int startY, StudentWorld* world):Actor(IID_PLAYER, st
     setVisible(true);
 }
 
-int Player::getNumLives()
-{
-    return m_lives;
-}
-
-void Player::decrementLives()
-{
-    if(m_lives>0)
-        m_lives--;
-    else
-        setDead();
-}
-
 int Player::getAmmo()
 {
     return m_ammo;
@@ -90,11 +77,12 @@ void Player::increaseAmmo(int pts)
 
 bool Player::bulletWillHarm(Actor* a)
 {
-    if(getNumLives()>0 && getHitPoints()>2)
+    StudentWorld* stud= getWorld();
+    if(stud->getLives() >0 && getHitPoints()>2)
     {
         decrementHitPoints(2);
         if(getHitPoints()<0)
-            decrementLives();
+            stud->decLives();
     }
     return true;
 }
@@ -194,7 +182,7 @@ void Player::doSomething()
                 }
                 break;
             case KEY_PRESS_ESCAPE:
-                decrementLives();
+                stud->decLives();
                 setDead();
                 break;
             case KEY_PRESS_SPACE:

@@ -64,9 +64,6 @@ public:
     }
     virtual void doSomething();
     
-    void decrementLives();
-    int getNumLives();
-    
     int getAmmo();
     void decrementAmmo();
     void increaseAmmo(int pts);

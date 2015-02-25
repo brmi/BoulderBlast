@@ -40,6 +40,10 @@ public:
     
     void setDisplayText();
     
+    void updateDisplayText();
+    
+    void setBonus();
+    
     std::string format(int score, int level, int lives, int health, int ammo, unsigned int bonus);
     
     void makeBullet(int x, int y, GraphObject::Direction dir);
@@ -59,6 +63,7 @@ private:
     Player* m_playerContainer;   //holds where player is
     int m_numJewels;
     bool m_playerCompletedLvl;
+    unsigned int m_bonus;
     
     
 };

@@ -17,6 +17,7 @@ StudentWorld::StudentWorld(std::string assetDir): GameWorld(assetDir)
 {
     m_numJewels=0;
     m_playerCompletedLvl=false;
+    m_bonus=1000;
 }
 
 string StudentWorld::format(int score, int level, int lives, int health, int ammo, unsigned int bonus)
@@ -25,7 +26,7 @@ string StudentWorld::format(int score, int level, int lives, int health, int amm
     
     oss.fill('0');
     
-    oss << "Score: " << setw(7)<< score << "  Level: "<< setw(2)<< level << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(3)<<ammo<<"  Bonus: " << setw(4)<<bonus;
+    oss << "Score: " << setw(7)<< score << "  Level: "<< setw(2)<< level << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(2)<<ammo<<"  Bonus: " << setw(4)<<bonus;
     
     string s = oss.str();
   
@@ -45,14 +46,32 @@ StudentWorld::~StudentWorld()
     }
 }
 
+
+
+
+void StudentWorld::setBonus()
+{
+    if(m_bonus==0)
+        return;
+    else
+        m_bonus-=1;
+    
+}
+
+
+void StudentWorld::updateDisplayText()
+{
+    
+}
+
 void StudentWorld::setDisplayText()
 {
-    int score=1000;
-    int level=1;
-    unsigned int bonus = 2500;
-    int lives= 2;
-    int health=4;
-    int ammo=3;
+    int score=getScore();
+    int level=getLevel();
+    unsigned int bonus = m_bonus;
+    int lives=getLives();
+    int health=100;
+    int ammo=m_playerContainer->getAmmo();
     
     
     string s = format(score, level, lives, health, ammo, bonus);
@@ -295,6 +314,7 @@ int StudentWorld::init()
 int StudentWorld:: move()
 {
     setDisplayText();
+    setBonus();
     
     if(m_playerContainer->isDead()==false)
     {
@@ -319,7 +339,11 @@ int StudentWorld:: move()
                 return GWSTATUS_PLAYER_DIED;
             
             if(playerCompletedLevel())
+            {
+                increaseScore(m_bonus);
+                m_bonus=1000;
                 return GWSTATUS_FINISHED_LEVEL;
+            }
         }
         
     }
