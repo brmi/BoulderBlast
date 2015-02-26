@@ -29,8 +29,6 @@ public:
     virtual void decrementHitPoints(int decreaseby);
     virtual void increaseHitPoints(int increaseby);
     
-    
-    
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool blocksRobots()=0;
     virtual bool bulletWillHarm()=0;
@@ -82,7 +80,6 @@ public:
     
 private:
     int m_ticks;
- 
 };
 
 class SnarlBots: public Robots
@@ -91,7 +88,7 @@ public:
     SnarlBots(int startX, int startY, Direction dir, StudentWorld* world);
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
-    virtual bool bulletWillHarm(){return true;}
+    virtual bool bulletWillHarm();
 
 };
 //

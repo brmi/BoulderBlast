@@ -26,7 +26,10 @@ string StudentWorld::format(int score, int level, int lives, int health, int amm
     
     oss.fill('0');
     
-    oss << "Score: " << setw(7)<< score << "  Level: "<< setw(2)<< level << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(2)<<ammo<<"  Bonus: " << setw(4)<<bonus;
+    oss << "Score: " << setw(7)<< score << "  Level: "<< setw(2)<< level;
+    
+    oss.fill(' ');
+    oss << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(3)<<ammo<<"  Bonus: " << setw(4)<<bonus;
     
     string s = oss.str();
   
@@ -125,9 +128,12 @@ Actor* StudentWorld::getActor(int x, int y)
         {
             Boulders* bp = dynamic_cast<Boulders*>(*itr); //return boulder highest precedence
             Wall* wp=dynamic_cast<Wall*>(*itr);
+            SnarlBots* sp=dynamic_cast<SnarlBots*>(*itr);
             if(bp!=nullptr)
                 return (*itr);
             else if(wp!=nullptr)
+                return (*itr);
+            else if(sp!=nullptr)
                 return (*itr);
             else
                 actr=(*itr);

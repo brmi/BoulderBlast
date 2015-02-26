@@ -93,6 +93,17 @@ SnarlBots::SnarlBots(int startX, int startY, Direction dir, StudentWorld* world)
     setVisible(true);
 }
 
+bool SnarlBots:: bulletWillHarm()
+{
+    StudentWorld* stud=getWorld();
+    stud->playSound(SOUND_ROBOT_DIE);
+    stud->increaseScore(100);
+    decrementHitPoints(2);
+    if(getHitPoints()<=0)
+        setDead();
+    return true;
+}
+
 void SnarlBots::doSomething()
 {
     decrTicks();
@@ -120,6 +131,7 @@ if(getTicks()<=0)
                 Boulders* bp=dynamic_cast<Boulders*>(ap);
                 if(ap!=nullptr && pp!=nullptr)
                 {
+                    stud->playSound(SOUND_ENEMY_FIRE);
                     stud->makeBullet(++x, y, right);
                     resetTicks();
                     return;
@@ -154,6 +166,7 @@ if(getTicks()<=0)
                 Boulders* bp=dynamic_cast<Boulders*>(qp);
                 if(qp!=nullptr && pp!=nullptr)
                 {
+                    stud->playSound(SOUND_ENEMY_FIRE);
                     stud->makeBullet(--x, y, left);
                     resetTicks();
                     return;
@@ -185,6 +198,7 @@ if(getTicks()<=0)
                 Boulders* bp= dynamic_cast<Boulders*>(zp);
                 if(zp!= nullptr && pp!=nullptr)
                 {
+                    stud->playSound(SOUND_ENEMY_FIRE);
                     stud->makeBullet(x, ++y, up);
                     resetTicks();
                     return;
@@ -216,6 +230,7 @@ if(getTicks()<=0)
                 Boulders* bp=dynamic_cast<Boulders*>(fp);
                  if(fp!=nullptr && pp!=nullptr)
                  {
+                     stud->playSound(SOUND_ENEMY_FIRE);
                      stud->makeBullet(x, --y, down);
                      resetTicks();
                      return;
@@ -424,7 +439,6 @@ void Player::doSomething()
                     getWorld()->makeBullet(--x, y, dir);
                 }
                 break;
-                
         }
     }
 }
@@ -456,16 +470,6 @@ void Bullets::doSomething()
     int y=getY();
     
     StudentWorld *stud= getWorld();
-    Actor* ap= stud->getActor(x,y);
-    
-    if(ap!=nullptr)
-    {
-        if(ap->bulletWillHarm())
-        {
-            setDead();
-            return;
-        }
-    }
     
     if(getDirection()==up)
     {
@@ -570,7 +574,6 @@ bool Boulders::blocksPlayer(Actor *a, Direction dir)
         moveBoulder(down);
         return false;
     }
-    
     return true;
 }
 
@@ -611,8 +614,6 @@ void Boulders::doSomething()
 {
     
 }
-
-
 
 void Boulders::moveBoulder(Direction dir)
 {
