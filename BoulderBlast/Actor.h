@@ -32,7 +32,8 @@ public:
     
     
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
-    virtual bool bulletWillHarm(Actor* a)=0;
+    virtual bool blocksRobots()=0;
+    virtual bool bulletWillHarm()=0;
    
 private:
     StudentWorld* m_actorworld;
@@ -42,52 +43,57 @@ private:
     
 };
 
-class Items: public Actor
-{
-public:
-    Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
-    //brmi add
-    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
-    virtual bool bulletWillHarm(Actor* a){return false;}
-private:
-    
-};
-
-
 class Player: public Actor
 {
 public:
     Player(int startX, int startY, StudentWorld* world);
-    virtual ~Player()
-    {
-        //getGraphObjects().erase(this);
-    }
+    virtual ~Player(){}
     virtual void doSomething();
     
     int getAmmo();
     void decrementAmmo();
     void increaseAmmo(int pts);
+    void restoreHealth();
+    int getHealth() const;
+    void decHealth();
     
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
-    virtual bool bulletWillHarm(Actor* a);
-    
-    
-    
+    virtual bool bulletWillHarm();
+    virtual bool blocksRobots(){return true;}
+
 private:
     int m_lives;
     int m_ammo;
-    
-    
+    int m_health;
     
 };
 
-//class SnarlBots: public Actor
-//{
-//public:
-//    SnarlBots(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//
-//};
+class Robots: public Actor
+{
+public:
+    Robots(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int startingHitPoints);
+    virtual ~Robots(){};
+    virtual void doSomething(){};
+    void resetTicks();
+    void decrTicks();
+    int getTicks();
+    bool robotWillShoot(Actor *ap);
+    virtual bool blocksRobots(){return true;}
+    
+private:
+    int m_ticks;
+ 
+};
+
+class SnarlBots: public Robots
+{
+public:
+    SnarlBots(int startX, int startY, Direction dir, StudentWorld* world);
+    virtual void doSomething();
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
+    virtual bool bulletWillHarm(){return true;}
+
+};
 //
 //class KleptoBots: public Actor
 //{
@@ -112,6 +118,8 @@ private:
 
 
 
+
+
 class Bullets: public Actor
 {
 public:
@@ -119,7 +127,8 @@ public:
     virtual ~Bullets(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){return true;}
-    virtual bool bulletWillHarm(Actor* a){return false;}
+    virtual bool bulletWillHarm(){return false;}
+    virtual bool blocksRobots() {return false;}
     
 };
 
@@ -130,7 +139,8 @@ public:
     virtual ~Exit(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
-    virtual bool bulletWillHarm(Actor* a){return false;}
+    virtual bool bulletWillHarm(){return false;}
+    virtual bool blocksRobots(){return false;}
 };
 
 class Wall: public Actor
@@ -140,8 +150,8 @@ public:
     virtual ~Wall(){}
     virtual void doSomething(){return;}
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
-    virtual bool bulletWillHarm(Actor* a){return true;}
-    
+    virtual bool bulletWillHarm(){return true;}
+    virtual bool blocksRobots(){return true;}
     
 private:
     
@@ -156,14 +166,10 @@ public:
     bool canBePushed(int x, int y);
     void moveBoulder(Direction dir);
     virtual bool blocksPlayer(Actor* a, Direction dir);
-    virtual bool bulletWillHarm(Actor* a);
-    
-    
-    
+    virtual bool bulletWillHarm();
+    virtual bool blocksRobots(){return true;}
     
 private:
-    
-    
 };
 
 class Holes: public Actor
@@ -173,12 +179,23 @@ public:
     virtual ~Holes(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
-    virtual bool bulletWillHarm(Actor* a){return false;}
+    virtual bool bulletWillHarm(){return false;}
+    virtual bool blocksRobots(){return true;}
     
 private:
     
 };
 
+class Items: public Actor
+{
+public:
+    Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
+    virtual bool bulletWillHarm(){return false;}
+    virtual bool blocksRobots(){return false;}
+private:
+    
+};
 
 class Jewels: public Items
 {

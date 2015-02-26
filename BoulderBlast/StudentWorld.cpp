@@ -46,7 +46,10 @@ StudentWorld::~StudentWorld()
     }
 }
 
-
+void StudentWorld::resetBonus()
+{
+    m_bonus=1000;
+}
 
 
 void StudentWorld::setBonus()
@@ -70,7 +73,7 @@ void StudentWorld::setDisplayText()
     int level=getLevel();
     unsigned int bonus = m_bonus;
     int lives=getLives();
-    int health=100;
+    int health=m_playerContainer->getHealth();
     int ammo=m_playerContainer->getAmmo();
     
     
@@ -159,7 +162,7 @@ void StudentWorld::removeDeadGameObjects()
     vector<Actor*>::iterator itr;
     for(itr=m_container.begin(); itr!=m_container.end(); itr++)
     {
-        if((*itr)->isDead()==true)
+        if((*itr)!=nullptr && (*itr)->isDead()==true)
         {
             delete *itr;
             itr=m_container.erase(itr);
@@ -177,15 +180,13 @@ void StudentWorld::makeBullet(int x, int y, GraphObject::Direction dir)
 
 int StudentWorld::init()
 {
-    
-    
     m_playerCompletedLvl=false;
     
     //////////////////////
     //load current level//
     /////////////////////
     
-    string curLevel= "level00.dat";
+    string curLevel= "level01.dat";
     Level lev(assetDirectory());
     Level::LoadResult result = lev.loadLevel(curLevel);
     
@@ -295,6 +296,28 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
+        }else if(item==Level::horiz_snarlbot)
+        {
+            
+            m_container.push_back(new SnarlBots(x,y, GraphObject::right, this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::vert_snarlbot)
+        {
+            
+            m_container.push_back(new SnarlBots(x,y, GraphObject::down, this));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
         }else
         {
             x++;
@@ -311,8 +334,14 @@ int StudentWorld::init()
     return GWSTATUS_CONTINUE_GAME;
 }
 
+
 int StudentWorld:: move()
 {
+    int ticks = (28- GameWorld::getLevel());
+    
+    if (ticks < 3)
+        ticks = 3;
+    
     setDisplayText();
     setBonus();
     
@@ -321,17 +350,23 @@ int StudentWorld:: move()
         m_playerContainer->doSomething();
         
         if(playerDied())
+        {
+            resetBonus();
             return GWSTATUS_PLAYER_DIED;
+        }
         
         if(playerCompletedLevel())
             return GWSTATUS_FINISHED_LEVEL;
     }else
+    {
+        resetBonus();
         return GWSTATUS_PLAYER_DIED;
+    }
     
     vector<Actor*>::iterator itr;
     for(itr=m_container.begin(); itr!=m_container.end(); itr++)
     {
-        if((*itr)->isDead()==false)
+        if((*itr)!=nullptr && (*itr)->isDead()==false)
         {
             (*itr)->doSomething();
             
@@ -349,9 +384,7 @@ int StudentWorld:: move()
     }
     
     removeDeadGameObjects();
-    
-    
-    
+
     return GWSTATUS_CONTINUE_GAME;
 }
 

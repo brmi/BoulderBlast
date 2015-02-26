@@ -43,6 +43,7 @@ public:
     void updateDisplayText();
     
     void setBonus();
+    void resetBonus();
     
     std::string format(int score, int level, int lives, int health, int ammo, unsigned int bonus);
     
@@ -64,8 +65,6 @@ private:
     int m_numJewels;
     bool m_playerCompletedLvl;
     unsigned int m_bonus;
-    
-    
 };
 
 #endif // STUDENTWORLD_H_
