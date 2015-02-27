@@ -49,6 +49,25 @@ StudentWorld::~StudentWorld()
     }
 }
 
+string StudentWorld::levelAsFileName()
+{
+    int i=getLevel();
+    if(i<10)
+    {
+        ostringstream oss;
+        oss << "level"<<0<<i<<".dat";
+        string s = oss.str();
+        
+        return s;
+    }
+    
+    ostringstream oss;
+    oss << "level"<< i<<".dat";
+    string s = oss.str();
+    
+      return s;
+}
+
 void StudentWorld::resetBonus()
 {
     m_bonus=1000;
@@ -64,7 +83,6 @@ void StudentWorld::setBonus()
     
 }
 
-
 void StudentWorld::updateDisplayText()
 {
     
@@ -78,12 +96,9 @@ void StudentWorld::setDisplayText()
     int lives=getLives();
     int health=m_playerContainer->getHealth();
     int ammo=m_playerContainer->getAmmo();
-    
-    
+
     string s = format(score, level, lives, health, ammo, bonus);
-    
-    
-    
+
     setGameStatText(s);
 }
 
@@ -129,12 +144,21 @@ Actor* StudentWorld::getActor(int x, int y)
             Boulders* bp = dynamic_cast<Boulders*>(*itr); //return boulder highest precedence
             Wall* wp=dynamic_cast<Wall*>(*itr);
             SnarlBots* sp=dynamic_cast<SnarlBots*>(*itr);
+            Items* ip= dynamic_cast<Items*>(*itr);
+            NormalKleptoBots* kp= dynamic_cast<NormalKleptoBots*>(*itr);
+            AngryKleptoBots* ang= dynamic_cast<AngryKleptoBots*>(*itr);
             if(bp!=nullptr)
                 return (*itr);
             else if(wp!=nullptr)
                 return (*itr);
             else if(sp!=nullptr)
                 return (*itr);
+            else if(kp!=nullptr)
+                return (*itr);
+            else if(ip!=nullptr)
+                return (*itr);
+            else if(ang!=nullptr)
+                return(*itr);
             else
                 actr=(*itr);
         }
@@ -144,10 +168,7 @@ Actor* StudentWorld::getActor(int x, int y)
 
 bool StudentWorld::playerDied()
 {
-    int lives= getLives();
-    if(lives<=0)
-        return true;
-    return false;
+    return m_playerContainer->isDead();
 }
 
 void StudentWorld::setPlayerCompletedLevel()
@@ -162,8 +183,6 @@ bool StudentWorld::playerCompletedLevel()
 
 void StudentWorld::removeDeadGameObjects()
 {
-    if(playerDied())
-        delete m_playerContainer;
     
     vector<Actor*>::iterator itr;
     for(itr=m_container.begin(); itr!=m_container.end(); itr++)
@@ -173,10 +192,9 @@ void StudentWorld::removeDeadGameObjects()
             delete *itr;
             itr=m_container.erase(itr);
             itr--;
-            
+        
         }
     }
-    
 }
 
 void StudentWorld::makeBullet(int x, int y, GraphObject::Direction dir)
@@ -184,20 +202,39 @@ void StudentWorld::makeBullet(int x, int y, GraphObject::Direction dir)
     m_container.push_back(new Bullets(x,y,dir, this));
 }
 
+void StudentWorld::makeKlepto(int x, int y,GraphObject::Direction dir, bool isNormal)
+{
+    if(isNormal)
+    {
+        cout<<"normal "<<m_container.size()<<endl;
+        m_container.push_back(new NormalKleptoBots(x,y, dir, this, 5));
+        cout<<m_container.size()<<endl<<endl;
+        return;
+    }
+    else
+    {
+        cout<<"angry "<<m_container.size()<<endl;
+        m_container.push_back(new AngryKleptoBots(x,y,dir, this, 8));
+        cout<<m_container.size()<<endl;
+        return;
+    }
+}
+
 int StudentWorld::init()
 {
+    srand(static_cast<unsigned int>(time(nullptr)));
     m_playerCompletedLvl=false;
     
     //////////////////////
     //load current level//
     /////////////////////
     
-    string curLevel= "level01.dat";
+    string curLevel= levelAsFileName();
     Level lev(assetDirectory());
     Level::LoadResult result = lev.loadLevel(curLevel);
     
     if(result==Level::load_fail_file_not_found || result==Level::load_fail_bad_format)
-        return -1; //something bad happened
+        return GWSTATUS_LEVEL_ERROR; //something bad happened
     
     //load was successful, can access contents
     
@@ -304,7 +341,6 @@ int StudentWorld::init()
             continue;
         }else if(item==Level::horiz_snarlbot)
         {
-            
             m_container.push_back(new SnarlBots(x,y, GraphObject::right, this));
             x++;
             if(x==15 && y<15)
@@ -324,7 +360,28 @@ int StudentWorld::init()
                 x=0;
             }
             continue;
-        }else
+        }else if(item==Level::angry_kleptobot_factory)
+        {
+            m_container.push_back(new Factories(x,y, this, false));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }else if(item==Level::kleptobot_factory)
+        {
+            m_container.push_back(new Factories(x,y, this, true));
+            x++;
+            if(x==15 && y<15)
+            {
+                y++;
+                x=0;
+            }
+            continue;
+        }
+        else
         {
             x++;
             if(x==15 && y<15)
@@ -334,40 +391,15 @@ int StudentWorld::init()
             }
             continue;
         }
-        
     }
-    
     return GWSTATUS_CONTINUE_GAME;
 }
 
 
 int StudentWorld:: move()
 {
-    int ticks = (28- GameWorld::getLevel());
-    
-    if (ticks < 3)
-        ticks = 3;
-    
     setDisplayText();
     setBonus();
-    
-    if(m_playerContainer->isDead()==false)
-    {
-        m_playerContainer->doSomething();
-        
-        if(playerDied())
-        {
-            resetBonus();
-            return GWSTATUS_PLAYER_DIED;
-        }
-        
-        if(playerCompletedLevel())
-            return GWSTATUS_FINISHED_LEVEL;
-    }else
-    {
-        resetBonus();
-        return GWSTATUS_PLAYER_DIED;
-    }
     
     vector<Actor*>::iterator itr;
     for(itr=m_container.begin(); itr!=m_container.end(); itr++)
@@ -386,7 +418,24 @@ int StudentWorld:: move()
                 return GWSTATUS_FINISHED_LEVEL;
             }
         }
+    }
+    
+    if(m_playerContainer->isDead()==false)
+    {
+        m_playerContainer->doSomething();
         
+        if(playerDied())
+        {
+            resetBonus();
+            return GWSTATUS_PLAYER_DIED;
+        }
+        
+        if(playerCompletedLevel())
+            return GWSTATUS_FINISHED_LEVEL;
+    }else
+    {
+        resetBonus();
+        return GWSTATUS_PLAYER_DIED;
     }
     
     removeDeadGameObjects();

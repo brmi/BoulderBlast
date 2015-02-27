@@ -49,8 +49,12 @@ public:
     
     void makeBullet(int x, int y, GraphObject::Direction dir);
     
+    void makeKlepto(int x, int y, GraphObject::Direction dir, bool isNormal);
+    
     int numJewels();
     void decNumJewels();
+    
+    std::string levelAsFileName();
     
     //accessor
     std::vector<Actor*>* getActorContainer();

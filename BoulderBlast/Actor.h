@@ -54,6 +54,7 @@ public:
     void restoreHealth();
     int getHealth() const;
     void decHealth();
+    int getPlayerLives(){return m_lives;}
     
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm();
@@ -77,6 +78,8 @@ public:
     int getTicks();
     bool robotWillShoot(Actor *ap);
     virtual bool blocksRobots(){return true;}
+    bool robotShoot(int x, int y, GraphObject::Direction dir);
+    virtual bool bulletWillHarm(){return false;}
     
 private:
     int m_ticks;
@@ -89,33 +92,51 @@ public:
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm();
+};
+
+class KleptoBots: public Robots
+{
+public:
+    KleptoBots(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual void doSomething();
+    virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
+    virtual bool bulletWillHarm();
+    //int getDistance();
+    void decrementDistance();
+
+private:
+    int m_distanceBeforeTurning;
+};
+
+class NormalKleptoBots: public KleptoBots
+{
+public:
+    NormalKleptoBots(int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual void doSomething();
+    virtual bool bulletWillHarm();
+};
+
+class AngryKleptoBots: public KleptoBots
+{
+public:
+    AngryKleptoBots(int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual bool bulletWillHarm();
+    virtual void doSomething();    
+};
+
+class Factories: public Actor
+{
+public:
+    Factories(int startX, int startY, StudentWorld* world, bool isNormal);
+    virtual void doSomething();
+    virtual bool blocksPlayer(Actor* a, Direction dir){return true;}
+    virtual bool blocksRobots(){return true;}
+    virtual bool bulletWillHarm(){return false;}
+    
+private:
+    bool m_isNormal;
 
 };
-//
-//class KleptoBots: public Actor
-//{
-//public:
-//    KleptoBots(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
-//class AngryKleptoBots: public KleptoBots
-//{
-//public:
-//    AngryKleptoBots(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-//
-//class Factories: public Actor
-//{
-//public:
-//    Factories(int imageID, int startX, int startY, Direction dir);
-//    virtual void doSomething();
-//};
-
-
-
-
 
 class Bullets: public Actor
 {
@@ -190,8 +211,10 @@ public:
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm(){return false;}
     virtual bool blocksRobots(){return false;}
+    bool playerCanPickUp();
+    void setPlayerCanPickUp(bool yesorno);
 private:
-    
+    bool m_pickUp;
 };
 
 class Jewels: public Items
