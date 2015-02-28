@@ -40,24 +40,22 @@ StudentWorld::~StudentWorld()
 {
     delete m_playerContainer;
     
-    vector<Actor*>::iterator it;
-    
-    for(it=m_container.begin(); it!=m_container.end();)
+    for(int i=0; i<m_container.size();)
     {
-        delete (*it); //delete Actor
-        it=m_container.erase(it);
+        delete m_container[i]; //delete Actor
+        m_container.erase(m_container.begin());
     }
 }
 
 string StudentWorld::levelAsFileName()
 {
-    int i=getLevel();
+    int i=1;
+    //int i=getLevel();
     if(i<10)
     {
         ostringstream oss;
         oss << "level"<<0<<i<<".dat";
         string s = oss.str();
-        
         return s;
     }
     
@@ -73,14 +71,12 @@ void StudentWorld::resetBonus()
     m_bonus=1000;
 }
 
-
 void StudentWorld::setBonus()
 {
     if(m_bonus==0)
         return;
     else
         m_bonus-=1;
-    
 }
 
 void StudentWorld::updateDisplayText()
@@ -102,17 +98,6 @@ void StudentWorld::setDisplayText()
     setGameStatText(s);
 }
 
-vector<Actor*>* StudentWorld::getActorContainer()
-{
-    vector<Actor*> *ptr =&m_container;
-    return ptr;
-}
-
-Player* StudentWorld::getPlayer()
-{
-    return m_playerContainer;
-}
-
 int StudentWorld::numJewels()
 {
     return m_numJewels;
@@ -127,40 +112,39 @@ Actor* StudentWorld::getActor(int x, int y)
 {
     Actor* actr=nullptr;
     
-    Actor* playa=getPlayer();
+    Actor* playa=m_playerContainer;
     if(playa!=nullptr)
     {
         if(playa->getX()==x && playa->getY()==y)
             return playa;
     }
     
-    vector<Actor*>* ptr = getActorContainer();
-    vector<Actor*>::iterator itr;
-    for(itr=(*ptr).begin(); itr!=(*ptr).end();itr++)
+
+    for(int i=0; i<m_container.size();i++)
     {
         
-        if((*itr)->getX() ==x && (*itr)->getY()==y)
+        if((m_container[i])->getX() ==x && (m_container[i])->getY()==y)
         {
-            Boulders* bp = dynamic_cast<Boulders*>(*itr); //return boulder highest precedence
-            Wall* wp=dynamic_cast<Wall*>(*itr);
-            SnarlBots* sp=dynamic_cast<SnarlBots*>(*itr);
-            Items* ip= dynamic_cast<Items*>(*itr);
-            NormalKleptoBots* kp= dynamic_cast<NormalKleptoBots*>(*itr);
-            AngryKleptoBots* ang= dynamic_cast<AngryKleptoBots*>(*itr);
+            Boulders* bp = dynamic_cast<Boulders*>(m_container[i]); //return boulder highest precedence
+            Wall* wp=dynamic_cast<Wall*>(m_container[i]);
+            SnarlBots* sp=dynamic_cast<SnarlBots*>(m_container[i]);
+            Items* ip= dynamic_cast<Items*>(m_container[i]);
+            NormalKleptoBots* kp= dynamic_cast<NormalKleptoBots*>(m_container[i]);
+            AngryKleptoBots* ang= dynamic_cast<AngryKleptoBots*>(m_container[i]);
             if(bp!=nullptr)
-                return (*itr);
+                return (m_container[i]);
             else if(wp!=nullptr)
-                return (*itr);
+                return (m_container[i]);
             else if(sp!=nullptr)
-                return (*itr);
+                return (m_container[i]);
             else if(kp!=nullptr)
-                return (*itr);
+                return (m_container[i]);
             else if(ip!=nullptr)
-                return (*itr);
+                return (m_container[i]);
             else if(ang!=nullptr)
-                return(*itr);
+                return(m_container[i]);
             else
-                actr=(*itr);
+                actr=(m_container[i]);
         }
     }
     return actr; //this will return the actual actor
@@ -183,16 +167,16 @@ bool StudentWorld::playerCompletedLevel()
 
 void StudentWorld::removeDeadGameObjects()
 {
+    if(m_playerContainer->isDead()==true)
+        delete m_playerContainer;
     
-    vector<Actor*>::iterator itr;
-    for(itr=m_container.begin(); itr!=m_container.end(); itr++)
+    for(int i=0; i<m_container.size(); i++)
     {
-        if((*itr)!=nullptr && (*itr)->isDead()==true)
+        if(m_container[i]->isDead()==true)
         {
-            delete *itr;
-            itr=m_container.erase(itr);
-            itr--;
-        
+            delete m_container[i];
+            m_container.erase(m_container.begin()+i);
+            i--;
         }
     }
 }
@@ -460,11 +444,9 @@ void StudentWorld::cleanUp()
 {
     delete m_playerContainer;
     
-    vector<Actor*>::iterator it;
-    
-    for(it=m_container.begin(); it!=m_container.end();)
+    for(int i=0; i<m_container.size();)
     {
-        delete (*it); //delete Actor
-        it=m_container.erase(it);
+        delete m_container[i]; //delete Actor
+        m_container.erase(m_container.begin());
     }
 }

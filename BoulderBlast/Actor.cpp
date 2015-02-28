@@ -408,7 +408,7 @@ void Factories::doSomething()
     if(ap!=nullptr && klepto!=nullptr) //if there is already a kleptobot on the factory
         return;
 
-    if(count<3 && m_isNormal)
+    if(m_isNormal)
     {
         int r=rand()%50;
         if(r==1) //1 in 50 chance of this
@@ -418,7 +418,7 @@ void Factories::doSomething()
             return;
         }
     }
-    else if(count<3 && !m_isNormal)
+    else if(!m_isNormal)
     {
         int r=rand()%50;
         if(r==1) //1 in 50 chance of this
@@ -456,21 +456,16 @@ bool KleptoBots::bulletWillHarm()
     return true;
 }
 
-void KleptoBots::setDead()
+KleptoBots::~KleptoBots()
 {
     int x=getX();
     int y=getY();
     
     getWorld()->makeItems(typeGoodie, x,y);
-    Actor::setDead();
-    
 }
 
 void KleptoBots:: doSomething()
 {
-    if (getWorld()->getPlayer()==nullptr)
-        return;
-        
     if(isDead())
         return;
 
@@ -479,12 +474,12 @@ void KleptoBots:: doSomething()
         
         StudentWorld *stud= getWorld();
         Actor* a= stud->getActor(x, y);
-        Items* ip=dynamic_cast<Items*>(a);
-        if((a!=nullptr && ip!=nullptr) && (ip->getX()==x && ip->getY()==y))
+        ExtraLifeGoodies* extra=dynamic_cast<ExtraLifeGoodies*>(a);
+        RestoreHealthGoodies* restore=dynamic_cast<RestoreHealthGoodies*>(a);
+        AmmoGoodies* ammo=dynamic_cast<AmmoGoodies*>(a);
+        if((a!=nullptr) && (a->getX()==x && a->getY()==y))
         {
-            ExtraLifeGoodies* extra=dynamic_cast<ExtraLifeGoodies*>(ip);
-            RestoreHealthGoodies* restore=dynamic_cast<RestoreHealthGoodies*>(ip);
-            AmmoGoodies* ammo=dynamic_cast<AmmoGoodies*>(ip);
+            
             int r=rand()%10; //one in ten chance of picking up item
             if(r==4)
             {
@@ -492,19 +487,24 @@ void KleptoBots:: doSomething()
                 {
                     extra->setDead();
                     typeGoodie="extra";
+                    stud->playSound(SOUND_ROBOT_MUNCH);
+                    return;
                 }
                 else if(restore!=nullptr)
                 {
                     restore->setDead();
                     typeGoodie="restore";
+                    stud->playSound(SOUND_ROBOT_MUNCH);
+                    return;
                 }
-                else
+                else if(ammo!=nullptr)
                 {
                     ammo->setDead();
                     typeGoodie="ammo";
+                    stud->playSound(SOUND_ROBOT_MUNCH);
+                    return;
                 }
-                stud->playSound(SOUND_ROBOT_MUNCH);
-                return;
+                
             }
         }
     
@@ -844,6 +844,7 @@ bool Player::bulletWillHarm()
         decrementHitPoints(2);
         if(getHitPoints()<=0)
         {
+            stud->playSound(SOUND_PLAYER_DIE);
             stud->decLives();
                 setDead();
         }

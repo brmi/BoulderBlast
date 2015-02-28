@@ -75,7 +75,7 @@ public:
     void decrTicks();
     int getTicks();
     bool robotWillShoot(Actor *ap);
-    virtual bool blocksRobots(){return true;}
+    bool blocksRobots(){return true;}
     bool robotShoot(int x, int y, GraphObject::Direction dir);
     virtual bool bulletWillHarm(){return false;}
     void RobotMove(int x, int y, Direction dir);
@@ -92,7 +92,6 @@ public:
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm();
-    virtual bool blocksRobots(){return true;}
     
 };
 
@@ -100,14 +99,10 @@ class KleptoBots: public Robots
 {
 public:
     KleptoBots(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
-    virtual ~KleptoBots(){}
-    virtual void setDead();
+    virtual ~KleptoBots();
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm();
-    //int getDistance();
-    //void decrementDistance();
-    virtual bool blocksRobots(){return true;}
     
 
 private:

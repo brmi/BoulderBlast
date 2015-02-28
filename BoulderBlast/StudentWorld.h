@@ -57,11 +57,7 @@ public:
     void decNumJewels();
     
     std::string levelAsFileName();
-    
-    //accessor
-    std::vector<Actor*>* getActorContainer();
-    Player* getPlayer();
-    
+        
     
     
 private:
