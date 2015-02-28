@@ -17,13 +17,13 @@ class Actor: public GraphObject
 public:
     Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int startingHitPoints);
     virtual ~Actor(){}
-    virtual void doSomething(){}; //=0
+    virtual void doSomething()=0;
     
     StudentWorld* getWorld() const;
-    bool isDead();
+    bool isDead() const;
     void setDead();
     
-    int getHitPoints();
+    int getHitPoints() const;
     void decrementHitPoints(int decreaseby);
     void increaseHitPoints(int increaseby);
     
@@ -137,7 +137,7 @@ public:
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){return true;}
     virtual bool blocksRobots(){return true;}
-    virtual bool bulletWillHarm(){return false;}
+    virtual bool bulletWillHarm(){return true;}
     
 private:
     bool m_isNormal;

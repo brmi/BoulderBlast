@@ -2,7 +2,7 @@
 #include "Actor.h"
 #include "Level.h"
 #include <string>
-
+#include "GameConstants.h"
 #include <iostream>
 #include <sstream>
 #include <iomanip>
@@ -32,7 +32,7 @@ string StudentWorld::format(int score, int level, int lives, int health, int amm
     oss << "  Lives: "<< setw(2)<<lives<<"  Health: "<< setw(3)<<health<<"%"<<"  Ammo: "<<setw(3)<<ammo<<"  Bonus: " << setw(4)<<bonus;
     
     string s = oss.str();
-  
+    
     return s;
 }
 
@@ -49,8 +49,7 @@ StudentWorld::~StudentWorld()
 
 string StudentWorld::levelAsFileName()
 {
-    int i=1;
-    //int i=getLevel();
+    int i=getLevel();
     if(i<10)
     {
         ostringstream oss;
@@ -58,7 +57,6 @@ string StudentWorld::levelAsFileName()
         string s = oss.str();
         return s;
     }
-    
     ostringstream oss;
     oss << "level"<< i<<".dat";
     string s = oss.str();
@@ -131,20 +129,29 @@ Actor* StudentWorld::getActor(int x, int y)
             Items* ip= dynamic_cast<Items*>(m_container[i]);
             NormalKleptoBots* kp= dynamic_cast<NormalKleptoBots*>(m_container[i]);
             AngryKleptoBots* ang= dynamic_cast<AngryKleptoBots*>(m_container[i]);
+            Holes* hls=dynamic_cast<Holes*>(m_container[i]);
+            Factories* fact=dynamic_cast<Factories*>(m_container[i]);
+            Exit* exit=dynamic_cast<Exit*> (m_container[i]);
             if(bp!=nullptr)
-                return (m_container[i]);
+                return m_container[i];
             else if(wp!=nullptr)
-                return (m_container[i]);
+                actr =m_container[i];
             else if(sp!=nullptr)
-                return (m_container[i]);
+                return m_container[i];
             else if(kp!=nullptr)
-                return (m_container[i]);
-            else if(ip!=nullptr)
-                return (m_container[i]);
+                return m_container[i];
             else if(ang!=nullptr)
-                return(m_container[i]);
+                return m_container[i];
+            else if(ip!=nullptr)
+                actr= m_container[i];
+            else if(hls!=nullptr)
+                actr= m_container[i];
+            else if(fact!=nullptr)
+                actr=m_container[i];
+            else if(exit!=nullptr)
+                actr=m_container[i];
             else
-                actr=(m_container[i]);
+                return actr; //if they all equal nullptr, just return it
         }
     }
     return actr; //this will return the actual actor
@@ -240,7 +247,7 @@ int StudentWorld::init()
     int x =0;
     int y=0;
     
-    while(x<=15 && y<=15) //maybe replace this with constants later
+    while(x<=VIEW_WIDTH && y<=VIEW_HEIGHT) //maybe replace this with constants later
     {
         //getContentsOf(col,row)
         Level::MazeEntry item = lev.getContentsOf(x, y);
@@ -248,7 +255,7 @@ int StudentWorld::init()
         {
             m_playerContainer= new Player(x, y, this);
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -258,7 +265,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Wall(x,y, this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -269,7 +276,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Boulders(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -280,7 +287,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Holes(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -292,7 +299,7 @@ int StudentWorld::init()
             m_numJewels++;
             m_container.push_back(new Jewels(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -302,7 +309,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new ExtraLifeGoodies(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -312,7 +319,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Exit(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -322,7 +329,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new RestoreHealthGoodies(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -332,7 +339,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new AmmoGoodies(x,y,this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -342,7 +349,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new SnarlBots(x,y, GraphObject::right, this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -353,7 +360,7 @@ int StudentWorld::init()
             
             m_container.push_back(new SnarlBots(x,y, GraphObject::down, this));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -363,7 +370,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Factories(x,y, this, false));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -373,7 +380,7 @@ int StudentWorld::init()
         {
             m_container.push_back(new Factories(x,y, this, true));
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;
@@ -383,7 +390,7 @@ int StudentWorld::init()
         else
         {
             x++;
-            if(x==15 && y<15)
+            if(x==VIEW_WIDTH && y<VIEW_HEIGHT)
             {
                 y++;
                 x=0;

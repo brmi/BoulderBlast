@@ -13,7 +13,7 @@ Actor::Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* w
     m_isDead=false;
 }
 
-bool Actor::isDead()
+bool Actor::isDead() const
 {
     return m_isDead;
 }
@@ -23,7 +23,7 @@ void Actor::setDead()
     m_isDead=true;
 }
 
-int Actor::getHitPoints()
+int Actor::getHitPoints() const
 {
     return m_hitPoints;
 }
@@ -94,13 +94,14 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
             Boulders* bp=dynamic_cast<Boulders*>(ap);
             KleptoBots* kp=dynamic_cast<KleptoBots*>(ap);
             Wall* wp=dynamic_cast<Wall*>(ap);
+            Factories* fp=dynamic_cast<Factories*>(ap);
             if(ap!=nullptr && pp!=nullptr)
             {
                 stud->playSound(SOUND_ENEMY_FIRE);
                 stud->makeBullet(x+1, y, right);
                 resetTicks();
                 return true;
-            }else if(ap!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
+            }else if(ap!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr|| fp!=nullptr))
                 return false;
         }
         return false;
@@ -115,13 +116,14 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
             Boulders* bp=dynamic_cast<Boulders*>(qp);
             KleptoBots* kp=dynamic_cast<KleptoBots*>(qp);
             Wall* wp=dynamic_cast<Wall*>(qp);
+            Factories* fp=dynamic_cast<Factories*>(qp);
             if(qp!=nullptr && pp!=nullptr)
             {
                 stud->playSound(SOUND_ENEMY_FIRE);
                 stud->makeBullet(x-1, y, left);
                 resetTicks();
                 return true;
-            }else if(qp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
+            }else if(qp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr || fp!=nullptr))
                 return false;
         }
         return false;
@@ -135,6 +137,7 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
             Boulders* bp= dynamic_cast<Boulders*>(zp);
             KleptoBots* kp=dynamic_cast<KleptoBots*>(zp);
             Wall* wp=dynamic_cast<Wall*>(zp);
+            Factories* fp=dynamic_cast<Factories*>(zp);
             if(zp!= nullptr && pp!=nullptr)
             {
                 stud->playSound(SOUND_ENEMY_FIRE);
@@ -142,7 +145,7 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
                 resetTicks();
                 return true;
             }
-            else if(zp!=nullptr && (bp!=nullptr||kp!=nullptr || wp!=nullptr ))
+            else if(zp!=nullptr && (bp!=nullptr||kp!=nullptr || wp!=nullptr || fp!=nullptr ))
                 return false;
         }
         return false;
@@ -156,13 +159,14 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
             Boulders* bp=dynamic_cast<Boulders*>(fp);
             KleptoBots* kp=dynamic_cast<KleptoBots*>(fp);
             Wall* wp=dynamic_cast<Wall*>(fp);
+            Factories* dp=dynamic_cast<Factories*>(fp);
             if(fp!=nullptr && pp!=nullptr)
             {
                 stud->playSound(SOUND_ENEMY_FIRE);
                 stud->makeBullet(x, y-1, down);
                 resetTicks();
                 return true;
-            }else if(fp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
+            }else if(fp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr || dp!=nullptr))
                 return false;
         }
         return false;
@@ -1345,7 +1349,6 @@ void Exit::doSomething()
             stud->playSound(SOUND_FINISHED_LEVEL);
             stud->increaseScore(2000);
             stud->setPlayerCompletedLevel();
-            //do bonus point stuff
         }
     }
 }
