@@ -3,8 +3,9 @@
 
 #include "GraphObject.h"
 #include "StudentWorld.h"
+#include "GameWorld.h" //added
 
-
+class StudentWorld; //added
 
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 
@@ -15,19 +16,16 @@ class Actor: public GraphObject
 {
 public:
     Actor(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int startingHitPoints);
-    virtual ~Actor()
-    {
-        //getGraphObjects().erase(this);
-    }
-    virtual void doSomething()=0;
+    virtual ~Actor(){}
+    virtual void doSomething(){}; //=0
     
     StudentWorld* getWorld() const;
     bool isDead();
     void setDead();
     
     int getHitPoints();
-    virtual void decrementHitPoints(int decreaseby);
-    virtual void increaseHitPoints(int increaseby);
+    void decrementHitPoints(int decreaseby);
+    void increaseHitPoints(int increaseby);
     
     virtual bool blocksPlayer(Actor* a, Direction dir)=0;
     virtual bool blocksRobots()=0;
@@ -71,7 +69,7 @@ class Robots: public Actor
 {
 public:
     Robots(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int startingHitPoints);
-    virtual ~Robots(){};
+    virtual ~Robots(){}
     virtual void doSomething(){};
     void resetTicks();
     void decrTicks();
@@ -80,6 +78,7 @@ public:
     virtual bool blocksRobots(){return true;}
     bool robotShoot(int x, int y, GraphObject::Direction dir);
     virtual bool bulletWillHarm(){return false;}
+    void RobotMove(int x, int y, Direction dir);
     
 private:
     int m_ticks;
@@ -89,29 +88,39 @@ class SnarlBots: public Robots
 {
 public:
     SnarlBots(int startX, int startY, Direction dir, StudentWorld* world);
+    virtual ~SnarlBots(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm();
+    virtual bool blocksRobots(){return true;}
+    
 };
 
 class KleptoBots: public Robots
 {
 public:
     KleptoBots(int imageID, int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual ~KleptoBots(){}
+    virtual void setDead();
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){ return true;}
     virtual bool bulletWillHarm();
     //int getDistance();
-    void decrementDistance();
+    //void decrementDistance();
+    virtual bool blocksRobots(){return true;}
+    
 
 private:
     int m_distanceBeforeTurning;
+    int m_kleptoCount;
+    std::string typeGoodie;
 };
 
 class NormalKleptoBots: public KleptoBots
 {
 public:
     NormalKleptoBots(int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual ~NormalKleptoBots(){}
     virtual void doSomething();
     virtual bool bulletWillHarm();
 };
@@ -120,6 +129,7 @@ class AngryKleptoBots: public KleptoBots
 {
 public:
     AngryKleptoBots(int startX, int startY, Direction dir, StudentWorld* world, int hitPoints);
+    virtual ~AngryKleptoBots(){}
     virtual bool bulletWillHarm();
     virtual void doSomething();    
 };
@@ -128,6 +138,7 @@ class Factories: public Actor
 {
 public:
     Factories(int startX, int startY, StudentWorld* world, bool isNormal);
+    virtual ~Factories(){}
     virtual void doSomething();
     virtual bool blocksPlayer(Actor* a, Direction dir){return true;}
     virtual bool blocksRobots(){return true;}
@@ -135,7 +146,6 @@ public:
     
 private:
     bool m_isNormal;
-
 };
 
 class Bullets: public Actor
@@ -179,7 +189,7 @@ class Boulders: public Actor
 {
 public:
     Boulders(int startX, int startY, StudentWorld* world);
-    virtual ~Boulders(){};
+    virtual ~Boulders(){}
     virtual void doSomething();
     bool canBePushed(int x, int y);
     void moveBoulder(Direction dir);
@@ -208,6 +218,7 @@ class Items: public Actor
 {
 public:
     Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints);
+    virtual ~Items(){}
     virtual bool blocksPlayer(Actor* a, Direction dir){ return false;}
     virtual bool bulletWillHarm(){return false;}
     virtual bool blocksRobots(){return false;}
@@ -230,7 +241,7 @@ class RestoreHealthGoodies: public Items
 {
 public:
     RestoreHealthGoodies(int startX, int startY, StudentWorld* world);
-    virtual ~RestoreHealthGoodies(){};
+    virtual ~RestoreHealthGoodies(){}
     virtual void doSomething();
     
 };

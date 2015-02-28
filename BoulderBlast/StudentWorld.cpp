@@ -206,16 +206,31 @@ void StudentWorld::makeKlepto(int x, int y,GraphObject::Direction dir, bool isNo
 {
     if(isNormal)
     {
-        cout<<"normal "<<m_container.size()<<endl;
         m_container.push_back(new NormalKleptoBots(x,y, dir, this, 5));
-        cout<<m_container.size()<<endl<<endl;
         return;
     }
     else
     {
-        cout<<"angry "<<m_container.size()<<endl;
         m_container.push_back(new AngryKleptoBots(x,y,dir, this, 8));
-        cout<<m_container.size()<<endl;
+        return;
+    }
+}
+
+void StudentWorld::makeItems(string typeGoodie, int x, int y)
+{
+    if(typeGoodie=="restore")
+    {
+        m_container.push_back(new RestoreHealthGoodies(x,y,this));
+        return;
+    }
+    if(typeGoodie=="extra")
+    {
+        m_container.push_back(new ExtraLifeGoodies(x,y,this));
+        return;
+    }
+    if(typeGoodie=="ammo")
+    {
+        m_container.push_back(new AmmoGoodies(x,y,this));
         return;
     }
 }
@@ -401,25 +416,6 @@ int StudentWorld:: move()
     setDisplayText();
     setBonus();
     
-    vector<Actor*>::iterator itr;
-    for(itr=m_container.begin(); itr!=m_container.end(); itr++)
-    {
-        if((*itr)!=nullptr && (*itr)->isDead()==false)
-        {
-            (*itr)->doSomething();
-            
-            if(playerDied())
-                return GWSTATUS_PLAYER_DIED;
-            
-            if(playerCompletedLevel())
-            {
-                increaseScore(m_bonus);
-                m_bonus=1000;
-                return GWSTATUS_FINISHED_LEVEL;
-            }
-        }
-    }
-    
     if(m_playerContainer->isDead()==false)
     {
         m_playerContainer->doSomething();
@@ -438,6 +434,23 @@ int StudentWorld:: move()
         return GWSTATUS_PLAYER_DIED;
     }
     
+    for(int i=0; i<m_container.size(); i++)
+    {
+        if(m_container[i]->isDead()==false)
+        {
+            m_container[i]->doSomething();
+            
+            if(playerDied())
+                return GWSTATUS_PLAYER_DIED;
+            
+            if(playerCompletedLevel())
+            {
+                increaseScore(m_bonus);
+                m_bonus=1000;
+                return GWSTATUS_FINISHED_LEVEL;
+            }
+        }
+    }
     removeDeadGameObjects();
 
     return GWSTATUS_CONTINUE_GAME;

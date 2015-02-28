@@ -1,4 +1,4 @@
-
+    
 #include "Actor.h"
 #include "StudentWorld.h"
 using namespace std;
@@ -85,7 +85,6 @@ bool Robots::robotWillShoot(Actor* ap)
 bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
 {
     StudentWorld* stud=getWorld();
-    
     if(dir==right)
     {
         for(int i= x+1; i<=14; i++)
@@ -100,29 +99,12 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
                 stud->playSound(SOUND_ENEMY_FIRE);
                 stud->makeBullet(x+1, y, right);
                 resetTicks();
-                
                 return true;
-            }
-            else if(ap!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
-                break;
+            }else if(ap!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
+                return false;
         }
-        
-        Actor* rp=stud->getActor(x+1, y);
-        if(rp!=nullptr && rp->blocksRobots()==false)
-        {
-            moveTo(++x,y);
-            resetTicks();
-            return true;
-        }
-        else if(rp!=nullptr && rp->blocksRobots()) //if it's a wall or boulder or something
-        {
-            setDirection(left);
-            resetTicks();
-            return true;
-        }else if(rp==nullptr)
-            moveTo(++x, y);
+        return false;
     }
-    
     if(dir==left)
     {
         
@@ -140,21 +122,102 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
                 resetTicks();
                 return true;
             }else if(qp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
-                break;
+                return false;
         }
+        return false;
+    }
+    if(dir==up)
+    {
+        for(int i= y+1; i<=14; i++)
+        {
+            Actor* zp= stud->getActor(x, i);
+            Player* pp= dynamic_cast<Player*>(zp);
+            Boulders* bp= dynamic_cast<Boulders*>(zp);
+            KleptoBots* kp=dynamic_cast<KleptoBots*>(zp);
+            Wall* wp=dynamic_cast<Wall*>(zp);
+            if(zp!= nullptr && pp!=nullptr)
+            {
+                stud->playSound(SOUND_ENEMY_FIRE);
+                stud->makeBullet(x, y+1, up);
+                resetTicks();
+                return true;
+            }
+            else if(zp!=nullptr && (bp!=nullptr||kp!=nullptr || wp!=nullptr ))
+                return false;
+        }
+        return false;
+    }
+    if(dir==down)
+    {
+        for(int i= y-1; i>=0; i--)
+        {
+            Actor* fp= stud->getActor(x, i);
+            Player* pp= dynamic_cast<Player*>(fp);
+            Boulders* bp=dynamic_cast<Boulders*>(fp);
+            KleptoBots* kp=dynamic_cast<KleptoBots*>(fp);
+            Wall* wp=dynamic_cast<Wall*>(fp);
+            if(fp!=nullptr && pp!=nullptr)
+            {
+                stud->playSound(SOUND_ENEMY_FIRE);
+                stud->makeBullet(x, y-1, down);
+                resetTicks();
+                return true;
+            }else if(fp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
+                return false;
+        }
+        return false;
+    }
+
+    return true;
+ 
+}
+
+void Robots::RobotMove(int x, int y, Direction dir)
+{
+    StudentWorld* stud=getWorld();
+    
+    if(dir==right)
+    {
+        
+        Actor* rp=stud->getActor(x+1, y);
+        if(rp!=nullptr && rp->blocksRobots()==false)
+        {
+            moveTo(x+1,y);
+            resetTicks();
+            return;
+        }
+        else if(rp!=nullptr && rp->blocksRobots()) //if it's a wall or boulder or something
+        {
+            setDirection(left);
+            resetTicks();
+            return;
+        }else if(rp==nullptr)
+        {
+            moveTo(x+1, y);
+            resetTicks();
+            return;
+        }
+    }
+    
+    if(dir==left)
+    {
         Actor* qp=stud->getActor(x-1, y);
         if(qp!=nullptr && qp->blocksRobots()==false)
         {
-            moveTo(--x,y);
+            moveTo(x-1,y);
             resetTicks();
-            return true;
+            return;
         }else if(qp!=nullptr && qp->blocksRobots()) //if it's a wall or boulder or something
         {
             setDirection(right);
             resetTicks();
-            return true;
+            return;
         }else if(qp==nullptr)
-            moveTo(--x, y);
+        {
+            moveTo(x-1, y);
+            resetTicks();
+            return;
+        }
     }
     
     if(dir==up)
@@ -171,7 +234,7 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
                 stud->playSound(SOUND_ENEMY_FIRE);
                 stud->makeBullet(x, y+1, up);
                 resetTicks();
-                return true;
+                return;
             }
             else if(zp!=nullptr && (bp!=nullptr||kp!=nullptr || wp!=nullptr ))
                 break;
@@ -179,51 +242,44 @@ bool Robots::robotShoot(int x, int y, GraphObject::Direction dir)
         Actor* zp= stud->getActor(x, y+1);
         if(zp!=nullptr && zp->blocksRobots()==false) //if nothing is blocking
         {
-            moveTo(x,++y);
+            moveTo(x,y+1);
             resetTicks();
-            return true;
+            return;
         }else if(zp!=nullptr && zp->blocksRobots()) //if it's a wall or boulder or something
         {
             setDirection(down);
             resetTicks();
-            return true;
+            return;
         }else if(zp==nullptr)
-            moveTo(x, ++y);
+        {
+            moveTo(x, y+1);
+            resetTicks();
+            return;
+        }
     }
     
     if(dir==down)
     {
-        for(int i= y-1; i>=0; i--)
-        {
-            Actor* fp= stud->getActor(x, i);
-            Player* pp= dynamic_cast<Player*>(fp);
-            Boulders* bp=dynamic_cast<Boulders*>(fp);
-            KleptoBots* kp=dynamic_cast<KleptoBots*>(fp);
-             Wall* wp=dynamic_cast<Wall*>(fp);
-            if(fp!=nullptr && pp!=nullptr)
-            {
-                stud->playSound(SOUND_ENEMY_FIRE);
-                stud->makeBullet(x, y-1, down);
-                resetTicks();
-                return true;
-            }else if(fp!=nullptr && (bp!=nullptr || kp!=nullptr || wp!=nullptr))
-                break;
-        }
         Actor* fp= stud->getActor(x, y-1);
         if(fp!=nullptr && fp->blocksRobots()==false)
         {
-            moveTo(x, --y);
+            moveTo(x, y-1);
             resetTicks();
-            return true;
+            return;
         }else if(fp!=nullptr && fp->blocksRobots())
         {
             setDirection(up);
             resetTicks();
-            return true;
+            return;
         }else if(fp==nullptr)
-            moveTo(x,--y);
+        {
+            moveTo(x,y-1);
+            resetTicks();
+            return;
+        }
     }
-    return false;
+    resetTicks();
+    return;
 }
 
 //////////////
@@ -263,8 +319,10 @@ if(getTicks()<=0)
     int y=getY();
 
     GraphObject::Direction dir= getDirection();
-        robotShoot(x, y, dir);
-        resetTicks();
+        if(robotShoot(x, y, dir))
+            return;
+        else
+            RobotMove(x, y, dir);
     }else
         return;    
 }
@@ -277,6 +335,7 @@ Factories::Factories(int startX, int startY, StudentWorld* world, bool isNormal)
 {
     setVisible(true);
     m_isNormal=isNormal;
+
 }
 
 void Factories::doSomething()
@@ -287,18 +346,62 @@ void Factories::doSomething()
     
     StudentWorld* stud=getWorld();
     
-    for(int i=x-3; i<=6; i++) //left and right
+    int i;
+    int i_upper;
+    if(x-3<=0)
     {
-        for(int j=y-3; j<=6; j++)
+        i=0;
+        i_upper=x+3;
+    }
+    else if(x+3>=14)
+    {
+        i=x-3;
+        i_upper=13;
+    }else
+    {
+        i=x-3;
+        i_upper=x+3;
+    }
+    
+    int j;
+    int j_upper;
+    int j_lower;
+    if(y-3<=0)
+    {
+        j=0;
+        j_lower=0;
+        j_upper=y+3;
+    }
+    else if(y+3>=14)
+    {
+        j=y-3;
+        j_lower=y-3;
+        j_upper=13;
+    }else
+    {
+        j=y-3;
+        j_lower=y-3;
+        j_upper=y+3;
+    }
+    
+    
+    for(; i<=i_upper; i++) //left and right
+    {
+        for(; j<=j_upper; j++)
         {
             Actor* ap= getWorld()-> getActor(i, j);
-            KleptoBots* kb= dynamic_cast<KleptoBots*>(ap);
-            if(ap!=nullptr && kb!=nullptr) //if there is a kleptobot on the square
+            NormalKleptoBots* kb= dynamic_cast<NormalKleptoBots*>(ap);
+            AngryKleptoBots* ag=dynamic_cast<AngryKleptoBots*>(ap);
+            if(ap!=nullptr && (kb!=nullptr || ag!=nullptr)) //if there is a kleptobot on the square
             {
                 count++;
             }
         }
+        j=j_lower;
     }
+    
+    if(count>=3)
+        return;
     
     Actor* ap= getWorld()-> getActor(getX(), getY());
     KleptoBots* klepto = dynamic_cast<KleptoBots*>(ap);
@@ -338,10 +441,6 @@ KleptoBots::KleptoBots(int ImageID, int startX, int startY, Direction dir, Stude
     setVisible(true);
 }
 
-void KleptoBots::decrementDistance()
-{
-    m_distanceBeforeTurning=m_distanceBeforeTurning-1;
-}
 
 bool KleptoBots::bulletWillHarm()
 {
@@ -357,9 +456,21 @@ bool KleptoBots::bulletWillHarm()
     return true;
 }
 
+void KleptoBots::setDead()
+{
+    int x=getX();
+    int y=getY();
+    
+    getWorld()->makeItems(typeGoodie, x,y);
+    Actor::setDead();
+    
+}
 
 void KleptoBots:: doSomething()
 {
+    if (getWorld()->getPlayer()==nullptr)
+        return;
+        
     if(isDead())
         return;
 
@@ -369,13 +480,29 @@ void KleptoBots:: doSomething()
         StudentWorld *stud= getWorld();
         Actor* a= stud->getActor(x, y);
         Items* ip=dynamic_cast<Items*>(a);
-        if(a!=nullptr && ip!=nullptr && ip->getX()==x && ip->getY()==y)
+        if((a!=nullptr && ip!=nullptr) && (ip->getX()==x && ip->getY()==y))
         {
+            ExtraLifeGoodies* extra=dynamic_cast<ExtraLifeGoodies*>(ip);
+            RestoreHealthGoodies* restore=dynamic_cast<RestoreHealthGoodies*>(ip);
+            AmmoGoodies* ammo=dynamic_cast<AmmoGoodies*>(ip);
             int r=rand()%10; //one in ten chance of picking up item
             if(r==4)
             {
-                ip->setVisible(false); //make the item invisible
-                ip->setPlayerCanPickUp(false);
+                if(extra!=nullptr)
+                {
+                    extra->setDead();
+                    typeGoodie="extra";
+                }
+                else if(restore!=nullptr)
+                {
+                    restore->setDead();
+                    typeGoodie="restore";
+                }
+                else
+                {
+                    ammo->setDead();
+                    typeGoodie="ammo";
+                }
                 stud->playSound(SOUND_ROBOT_MUNCH);
                 return;
             }
@@ -393,15 +520,15 @@ void KleptoBots:: doSomething()
                 {
                     if(b->blocksRobots()==false)
                 {
-                    moveTo(++x, y);
+                    moveTo(x+1, y);
                     return;
+                }
                 }else if(b==nullptr)
                 {
-                    moveTo(++x,y);
+                    moveTo(x+1,y);
                     return;
                 }
                     encounteredObstruction=true;
-                }
             }
             if(getDirection()==left)
             {
@@ -410,27 +537,26 @@ void KleptoBots:: doSomething()
                     {
                         if(b->blocksRobots()==false)
                     {
-                        moveTo(--x, y);
+                        moveTo(x-1, y);
                         return;
+                    }
                     }else if(b==nullptr)
                     {
-                        moveTo(--x,y);
+                        moveTo(x-1,y);
                         return;
                     }
                         encounteredObstruction=true;
-                }
             }
             if(getDirection()==up)
             {
                 Actor* b=stud->getActor(x, y+1);
                 if(b!=nullptr && b->blocksRobots()==false)
                 {
-                    moveTo(x, y);
+                    moveTo(x, y+1);
                     return;
                 }else if(b==nullptr)
                 {
-                    moveTo(x,y);
-                    
+                    moveTo(x,y+1);
                     return;
                 }
                 encounteredObstruction=true;
@@ -440,11 +566,11 @@ void KleptoBots:: doSomething()
                 Actor* b=stud->getActor(x, y-1);
                 if(b!=nullptr && b->blocksRobots()==false)
                 {
-                    moveTo(x, y);
+                    moveTo(x, y-1);
                     return;
                 }else if(b==nullptr)
                 {
-                    moveTo(x,y);
+                    moveTo(x,y-1);
                     return;
                 }
                 encounteredObstruction=true;
@@ -496,7 +622,7 @@ void KleptoBots:: doSomething()
                         setDirection(right);
                         if(ap==nullptr || (ap!=nullptr && ap->blocksRobots()==false))
                         {
-                            moveTo(x, y);
+                            moveTo(x+1, y);
                             m_distanceBeforeTurning--;
                             return;
                         }
@@ -521,7 +647,7 @@ void KleptoBots:: doSomething()
                         setDirection(left);
                         if(ap==nullptr || (ap!=nullptr && ap->blocksRobots()==false))
                         {
-                            moveTo(x, y);
+                            moveTo(x-1, y);
                             m_distanceBeforeTurning--;
                             return;
                         }
@@ -546,7 +672,7 @@ void KleptoBots:: doSomething()
                         setDirection(up);
                         if(ap==nullptr || (ap!=nullptr && ap->blocksRobots()==false))
                         {
-                            moveTo(x, y);
+                            moveTo(x, y+1);
                             m_distanceBeforeTurning--;
                             return;
                         }
@@ -571,7 +697,7 @@ void KleptoBots:: doSomething()
                         setDirection(down);
                         if(ap==nullptr || (a!=nullptr && ap->blocksRobots()==false))
                         {
-                            moveTo(x, y);
+                            moveTo(x, y-1);
                             m_distanceBeforeTurning--;
                             return;
                         }
@@ -590,7 +716,6 @@ void KleptoBots:: doSomething()
 NormalKleptoBots::NormalKleptoBots(int startX, int startY, Direction dir, StudentWorld* world, int hitPoints):KleptoBots(IID_KLEPTOBOT, startX, startY, right, world, 5)
 {
     setVisible(true);
-    
 }
 
 bool NormalKleptoBots::bulletWillHarm()
@@ -609,6 +734,9 @@ bool NormalKleptoBots::bulletWillHarm()
 
 void NormalKleptoBots::doSomething()
 {
+    if(isDead())
+        return;
+    
     if(getTicks()>0)
     {
         decrTicks();
@@ -635,6 +763,7 @@ bool AngryKleptoBots::bulletWillHarm()
     decrementHitPoints(2);
     if(getHitPoints()<=0)
     {
+        
         getWorld()->increaseScore(20); //10 for normal kleptobots
         getWorld()->playSound(SOUND_ROBOT_DIE);
         setDead();
@@ -646,7 +775,10 @@ bool AngryKleptoBots::bulletWillHarm()
 
 void AngryKleptoBots::doSomething()
 {
-    /*Otherwise, the Angry KleptoBot must determine whether it should fire its laser cannon: If the Player is in the same row or column as the Angry KleptoBot AND the Angry KleptoBot is currently facing the Player AND there are no obstacles (specifically, Walls, Boulders, robots, or robot factories) in the way, then the Angry KleptoBot will fire a bullet toward the Player and then do nothing more during the current tick.*/
+    int x=getX();
+    int y=getY();
+    if(isDead())
+        return;
     
     if(getTicks()>0)
     {
@@ -655,8 +787,10 @@ void AngryKleptoBots::doSomething()
     }else
     {
         resetTicks();
-        if(robotShoot(getX(), getY(), getDirection()))
+        if(robotShoot(x, y, getDirection())) //if true, the bot has already done it's deed
+        {
             return;
+        }
         KleptoBots::doSomething();
     }
 }
@@ -1009,7 +1143,6 @@ bool Boulders::canBePushed(int x, int y)
     {
         if(hp!=nullptr)
         {
-            //hp->killHole(hp);
             return true;
         }
     }
@@ -1054,11 +1187,6 @@ void Boulders::moveBoulder(Direction dir)
 Items::Items(int imageID, int startX, int startY,Direction dir, StudentWorld *world, int startingHitPoints):Actor(imageID, startX, startY, dir, world, startingHitPoints)
 {
     m_pickUp=true;
-}
-    
-void Items::setPlayerCanPickUp(bool yesorno)
-{
-    m_pickUp=yesorno;
 }
 
 bool Items::playerCanPickUp()

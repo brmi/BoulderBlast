@@ -51,6 +51,8 @@ public:
     
     void makeKlepto(int x, int y, GraphObject::Direction dir, bool isNormal);
     
+    void makeItems(std::string typeGoodie, int x, int y);
+    
     int numJewels();
     void decNumJewels();
     
